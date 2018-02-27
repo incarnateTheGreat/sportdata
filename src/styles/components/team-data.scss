@@ -1,0 +1,17 @@
+table {
+	width: 100%;
+
+	tr {
+		&:nth-of-type(odd) {
+			background-color: #bebebe;
+		}
+
+		td {
+			padding: 5px;
+
+			&.dataCol {
+				text-align: right;
+			}
+		}
+	}
+}
