@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import Fixture from './Fixture';
 import axios from 'axios';
 import moment from 'moment';
+import _ from 'lodash';
 import * as constants from '../constants';
 
 export default class SearchFlight extends Component {
@@ -10,7 +12,7 @@ export default class SearchFlight extends Component {
 		this.state = {
 			teamLogo: '',
 			teamSchedule: null,
-			fixtures: null
+			fixtures: []
 		}
 
 		this.getTeamData = this.getTeamData.bind(this);
@@ -57,11 +59,36 @@ export default class SearchFlight extends Component {
 	getFixtures() {
 		const { today, nextFiveDays } = this.getNextFiveDays(),
 					url = `https://apifootball.com/api/?action=get_events&from=${today}&to=${nextFiveDays}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
+		let tempArr = [],
+				fixtures = []
 
+		// Return Fixture Data and group by date.
 		this.getData(url).then(data => {
-			console.log(data.data);
-			this.setState({
-				fixtures: data.data
+			tempArr = data.data.reduce((r, a) => {
+				r[a.match_date] = r[a.match_date] || [];
+				r[a.match_date].push(a);
+				return r;
+			}, []);
+
+			// fixtures = _.groupBy(data.data, o => {
+			// 	return o.match_date;
+			// });
+			//
+			// fixtures = [fixtures];
+
+			for(let x in tempArr) {
+				fixtures.push(tempArr[x])
+			}
+
+			// console.log(fixtures);
+
+			this.setState({ fixtures }, () => {
+				// for (let val in this.state.fixtures) {
+				// 	console.log(val);
+				// 	this.state.fixtures[val].map((e, i) => {
+				// 		console.log(e);
+				// 	})
+				// }
 			})
 		});
 	}
@@ -71,6 +98,10 @@ export default class SearchFlight extends Component {
 	}
 
   render() {
+
+
+		// const fixtureItems = this.state.fixtures ? this.state.fixtures.map((fixture, i) => <Fixtures fixture={fixture} key={i} />) : null
+
 		return (
 			<div className='mainBody'>
 				<div className='teamData'>
@@ -94,24 +125,18 @@ export default class SearchFlight extends Component {
 					) : ''}
 				</div>
 
-				<div>
+				<div className='fixtures'>
 					<button type='button' value='' onClick={this.getFixtures}>Get Fixtures</button>
-					{this.state.fixtures ? (
-						<table>
-							<tbody>
-							{this.state.fixtures.map((row, i) =>
-								<tr key={i}>
-									<td>{row.match_date}</td>
-									<td>{row.match_hometeam_name}</td>
-									<td>{row.match_awayteam_name}</td>
-									<td>{row.match_time}</td>
-								</tr>
-							)}
-							</tbody>
-						</table>
-					) : ''}
+					<div>
+						{this.state.fixtures ? (
+							<table>
+								<tbody>
+									{this.state.fixtures.map((fixture, i) => <Fixture fixture={fixture} key={i} />)}
+								</tbody>
+							</table>
+						) : ''}
+					</div>
 				</div>
-
 			</div>
 		)
   }
