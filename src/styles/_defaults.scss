@@ -1,0 +1,137 @@
+// Use border-box for all elements.
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+}
+
+// Disable MS's default "clear" button for all input fields.
+::-ms-clear {
+	display: none;
+	height: 0;
+	opacity: 0;
+	visibility: hidden;
+	width: 0;
+}
+
+// Enable font smoothing and legibility options for all content.
+html {
+	font-family: sans-serif;
+	text-rendering: optimizeLegibility;
+	-moz-osx-font-smoothing: grayscale;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
+}
+
+a, ._link {
+	color: $primary-blue;
+  cursor: pointer;
+  transition: all 0.1s ease;
+	text-decoration: none;
+	-webkit-tap-highlight-color: transparent;
+
+	&:hover {
+		color: $secondary-blue;
+	}
+}
+
+body {
+	background-color: $white;
+	color: $black;
+	font-family: $font-main;
+	font-size: $font-size-base;
+	height: 100%;
+	margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  & > li {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+input {
+	border: 1px solid $dark-grey;
+	border-radius: 2px;
+	padding: 5px;
+}
+
+// Switch Button
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+select {
+	background-color: $dark-grey;
+	border: 1px solid $light-grey;
+	border-radius: 5px;
+	color: $black;
+	font-weight: bold;
+	height: 25px;
+}

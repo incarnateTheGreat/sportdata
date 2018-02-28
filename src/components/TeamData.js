@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import moment from 'moment';
+import * as constants from '../constants';
 
 export default class SearchFlight extends Component {
 	constructor(props) {
@@ -7,11 +9,13 @@ export default class SearchFlight extends Component {
 
 		this.state = {
 			teamLogo: '',
-			teamSchedule: null
+			teamSchedule: null,
+			fixtures: null
 		}
 
 		this.getTeamData = this.getTeamData.bind(this);
 		this.getTeamSchedule = this.getTeamSchedule.bind(this);
+		this.getFixtures = this.getFixtures.bind(this);
 	}
 
 	getTeamData() {
@@ -43,27 +47,71 @@ export default class SearchFlight extends Component {
       })
 	}
 
+	getNextFiveDays() {
+		const today = moment().format('YYYY-MM-DD'),
+					nextFiveDays = moment().add(5, 'day').format('YYYY-MM-DD');
+
+		return { today, nextFiveDays }
+	}
+
+	getFixtures() {
+		const { today, nextFiveDays } = this.getNextFiveDays(),
+					url = `https://apifootball.com/api/?action=get_events&from=${today}&to=${nextFiveDays}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
+
+		this.getData(url).then(data => {
+			console.log(data.data);
+			this.setState({
+				fixtures: data.data
+			})
+		});
+	}
+
+	async getData(url) {
+		return await axios(url);
+	}
+
   render() {
 		return (
-			<div>
-				<button type="button" value="" onClick={this.getTeamData}>Get Team Data</button>
-				<button type="button" value="" onClick={this.getTeamSchedule}>Get Team Schedule</button>
-				<h2>{this.state.teamName}</h2>
-				<img src={this.state.teamLogo} alt=""/>
+			<div className='mainBody'>
+				<div className='teamData'>
+					<button type='button' value='' onClick={this.getTeamData}>Get Team Data</button>
+					<button type='button' value='' onClick={this.getTeamSchedule}>Get Team Schedule</button>
+					<h2>{this.state.teamName}</h2>
+					<img src={this.state.teamLogo} alt=''/>
 
-				{this.state.teamSchedule ? (
-					<table>
-						<tbody>
-						{this.state.teamSchedule.map((row, i) =>
-							<tr key={i}>
-								<td>{row.strEvent}</td>
-								<td className='dataCol'>{row.dateEvent}</td>
-								<td className='dataCol'>{row.strTime}</td>
-							</tr>
-						)}
-						</tbody>
-					</table>
-				) : ''}
+					{this.state.teamSchedule ? (
+						<table>
+							<tbody>
+							{this.state.teamSchedule.map((row, i) =>
+								<tr key={i}>
+									<td>{row.strEvent}</td>
+									<td className='dataCol'>{row.dateEvent}</td>
+									<td className='dataCol'>{row.strTime}</td>
+								</tr>
+							)}
+							</tbody>
+						</table>
+					) : ''}
+				</div>
+
+				<div>
+					<button type='button' value='' onClick={this.getFixtures}>Get Fixtures</button>
+					{this.state.fixtures ? (
+						<table>
+							<tbody>
+							{this.state.fixtures.map((row, i) =>
+								<tr key={i}>
+									<td>{row.match_date}</td>
+									<td>{row.match_hometeam_name}</td>
+									<td>{row.match_awayteam_name}</td>
+									<td>{row.match_time}</td>
+								</tr>
+							)}
+							</tbody>
+						</table>
+					) : ''}
+				</div>
+
 			</div>
 		)
   }

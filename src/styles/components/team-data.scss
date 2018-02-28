@@ -1,16 +1,24 @@
-table {
-	width: 100%;
+.mainBody {
+	padding: 10px;
+	
+	.teamData {
+		display: none;
+	}
 
-	tr {
-		&:nth-of-type(odd) {
-			background-color: #bebebe;
-		}
+	table {
+		width: 100%;
 
-		td {
-			padding: 5px;
+		tr {
+			&:nth-of-type(odd) {
+				background-color: #bebebe;
+			}
 
-			&.dataCol {
-				text-align: right;
+			td {
+				padding: 5px;
+
+				&.dataCol {
+					text-align: right;
+				}
 			}
 		}
 	}

@@ -4,6 +4,7 @@ Using:
 
 - React
 - Axios
-- TheSportsDB.
+- TheSportsDB
+- APIFootball
 
 More to come.

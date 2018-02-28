@@ -1,2 +1,8 @@
+// Defaults
+@import './_variables';
+@import './_defaults';
+@import './_respond-to';
+
+// Components
 @import './components/header';
 @import './components/team-data';
