@@ -5,21 +5,41 @@
 		display: none;
 	}
 
-	.fixtures {}
+	.fixtures {
+		.fixtures_container {
+			padding: 10px 0;
+			
+			table {
+				margin: 0 0 20px;
+				width: 100%;
 
-	table {
-		width: 100%;
+				thead {
+					tr {
+						background-color: $dark-white;
+						color: $white;
 
-		tr {
-			&:nth-of-type(odd) {
-				background-color: #bebebe;
-			}
+						td {
+							font-weight: bold;
+							padding: 5px;
+						}
+					}
+				}
 
-			td {
-				padding: 5px;
+				tbody {
+					tr {
+						&:nth-of-type(odd) {
+							background-color: $light-grey;
+						}
 
-				&.dataCol {
-					text-align: right;
+						td {
+							padding: 5px;
+							width: 33%;
+
+							&.dataCol {
+								text-align: right;
+							}
+						}
+					}
 				}
 			}
 		}

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Fixture from './Fixture';
 import axios from 'axios';
 import moment from 'moment';
-import _ from 'lodash';
 import * as constants from '../constants';
 
 export default class SearchFlight extends Component {
@@ -70,26 +69,11 @@ export default class SearchFlight extends Component {
 				return r;
 			}, []);
 
-			// fixtures = _.groupBy(data.data, o => {
-			// 	return o.match_date;
-			// });
-			//
-			// fixtures = [fixtures];
+			// In order to loop through the array, we will push the objects into an array format.
+			for(let x in tempArr) fixtures.push(tempArr[x]);
 
-			for(let x in tempArr) {
-				fixtures.push(tempArr[x])
-			}
-
-			// console.log(fixtures);
-
-			this.setState({ fixtures }, () => {
-				// for (let val in this.state.fixtures) {
-				// 	console.log(val);
-				// 	this.state.fixtures[val].map((e, i) => {
-				// 		console.log(e);
-				// 	})
-				// }
-			})
+			// Apply into the State.
+			this.setState({ fixtures });
 		});
 	}
 
@@ -98,10 +82,6 @@ export default class SearchFlight extends Component {
 	}
 
   render() {
-
-
-		// const fixtureItems = this.state.fixtures ? this.state.fixtures.map((fixture, i) => <Fixtures fixture={fixture} key={i} />) : null
-
 		return (
 			<div className='mainBody'>
 				<div className='teamData'>
@@ -127,14 +107,19 @@ export default class SearchFlight extends Component {
 
 				<div className='fixtures'>
 					<button type='button' value='' onClick={this.getFixtures}>Get Fixtures</button>
-					<div>
-						{this.state.fixtures ? (
-							<table>
+					<div className='fixtures_container'>
+						{this.state.fixtures.map((fixture, i) => {
+							return <table key={i}>
+								<thead>
+									<tr>
+										<td colSpan='4'>{moment(fixture[0].match_date).format('MMMM DD, YYYY')}</td>
+									</tr>
+								</thead>
 								<tbody>
-									{this.state.fixtures.map((fixture, i) => <Fixture fixture={fixture} key={i} />)}
+									{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
 								</tbody>
 							</table>
-						) : ''}
+						})}
 					</div>
 				</div>
 			</div>
