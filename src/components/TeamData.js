@@ -86,7 +86,7 @@ export default class SearchFlight extends Component {
 
   render() {
 		return (
-			<div className='mainBody'>
+			<section className='mainBody'>
 				<div className='teamData'>
 					<button type='button' value='' onClick={this.getTeamData}>Get Team Data</button>
 					<button type='button' value='' onClick={this.getTeamSchedule}>Get Team Schedule</button>
@@ -124,7 +124,7 @@ export default class SearchFlight extends Component {
 						)}
 					</div>
 				</div>
-			</div>
+			</section>
 		)
   }
 }
