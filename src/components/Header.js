@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
 class Header extends Component {
@@ -17,7 +17,7 @@ class Header extends Component {
 				<h1>Sport Data</h1>
 				<nav>
 					<ul>
-						<li onClick={() => this.navigateTo('/')}>Home</li>
+						<li onClick={() => this.navigateTo('/')}>Fixtures</li>
 						<li onClick={() => this.navigateTo('/standings')}>Standings</li>
 					</ul>
 				</nav>

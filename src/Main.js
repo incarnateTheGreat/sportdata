@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import TeamData from './components/TeamData';
+import Fixtures from './components/Fixtures';
 import Standings from './components/Standings';
 
 class Main extends Component {
@@ -8,7 +8,7 @@ class Main extends Component {
 		return (
 			<main>
 				<Switch>
-					<Route exact path='/' component={TeamData}></Route>
+					<Route exact path='/' component={Fixtures}></Route>
 					<Route path='/standings' component={Standings}></Route>
 				</Switch>
 			</main>

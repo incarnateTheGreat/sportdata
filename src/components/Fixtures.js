@@ -4,7 +4,7 @@ import axios from 'axios';
 import moment from 'moment';
 import * as constants from '../constants';
 
-export default class SearchFlight extends Component {
+export default class Fixtures extends Component {
 	constructor(props) {
 		super();
 
