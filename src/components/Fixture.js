@@ -7,7 +7,10 @@ export default class Fixture extends Component {
 		const m = moment.utc(match_time, 'HH:mm'),
 					tz = moment.tz.guess();
 
-		return m.clone().tz(tz).format('HH:mm ZZ');
+		let modifiedTimeStr = m.clone().tz(tz);
+
+		// Check if the Moment Date is valid. If not, return the original Match Time.
+		return modifiedTimeStr.isValid() ? modifiedTimeStr.format('HH:mm ZZ') : match_time;
 	}
 	render() {
 		const { match_hometeam_name,
