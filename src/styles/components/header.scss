@@ -6,4 +6,20 @@ header {
 	h1 {
 		padding: 10px 0;
 	}
+
+	nav {
+		ul {
+			display: flex;
+			list-style: none;
+
+			li {
+				min-width: 50px;
+
+				&:hover {
+					cursor: pointer;
+					color: $light-grey;
+				}
+			}
+		}
+	}
 }
