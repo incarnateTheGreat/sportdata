@@ -16,7 +16,6 @@ export default class SearchFlight extends Component {
 
 		this.getTeamData = this.getTeamData.bind(this);
 		this.getTeamSchedule = this.getTeamSchedule.bind(this);
-		this.getFixtures = this.getFixtures.bind(this);
 	}
 
 	getTeamData() {
@@ -81,6 +80,10 @@ export default class SearchFlight extends Component {
 		return await axios(url);
 	}
 
+	componentDidMount() {
+		this.getFixtures();
+	}
+
   render() {
 		return (
 			<div className='mainBody'>
@@ -106,10 +109,9 @@ export default class SearchFlight extends Component {
 				</div>
 
 				<div className='fixtures'>
-					<button type='button' value='' onClick={this.getFixtures}>Get Fixtures</button>
 					<div className='fixtures_container'>
-						{this.state.fixtures.map((fixture, i) => {
-							return <table key={i}>
+						{this.state.fixtures.map((fixture, i) =>
+							<table key={i}>
 								<thead>
 									<tr>
 										<td colSpan='4'>{moment(fixture[0].match_date).format('MMMM DD, YYYY')}</td>
@@ -119,7 +121,7 @@ export default class SearchFlight extends Component {
 									{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
 								</tbody>
 							</table>
-						})}
+						)}
 					</div>
 				</div>
 			</div>
