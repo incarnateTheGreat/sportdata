@@ -48,20 +48,21 @@ export default class Fixtures extends Component {
 	}
 
 	getNextFiveDays() {
-		const today = moment().format('YYYY-MM-DD'),
+		const twoDaysAgo = moment().subtract(2, 'day').format('YYYY-MM-DD'),
 					nextFiveDays = moment().add(5, 'day').format('YYYY-MM-DD');
 
-		return { today, nextFiveDays }
+		return { twoDaysAgo, nextFiveDays }
 	}
 
 	getFixtures() {
-		const { today, nextFiveDays } = this.getNextFiveDays(),
-					url = `https://apifootball.com/api/?action=get_events&from=${today}&to=${nextFiveDays}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
+		const { twoDaysAgo, nextFiveDays } = this.getNextFiveDays(),
+					url = `https://apifootball.com/api/?action=get_events&from=${twoDaysAgo}&to=${nextFiveDays}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
 		let tempArr = [],
 				fixtures = []
 
 		// Return Fixture Data and group by date.
 		this.getData(url).then(data => {
+			console.log(data.data);
 			tempArr = data.data.reduce((r, a) => {
 				r[a.match_date] = r[a.match_date] || [];
 				r[a.match_date].push(a);
@@ -86,7 +87,7 @@ export default class Fixtures extends Component {
 
   render() {
 		return (
-			<section className='mainBody'>
+			<section className='fixtures'>
 				<div className='teamData'>
 					<button type='button' value='' onClick={this.getTeamData}>Get Team Data</button>
 					<button type='button' value='' onClick={this.getTeamSchedule}>Get Team Schedule</button>
@@ -108,22 +109,18 @@ export default class Fixtures extends Component {
 					) : ''}
 				</div>
 
-				<div className='fixtures'>
-					<div className='fixtures_container'>
-						{this.state.fixtures.map((fixture, i) =>
-							<table key={i}>
-								<thead>
-									<tr>
-										<td colSpan='4'>{moment(fixture[0].match_date).format('MMMM DD, YYYY')}</td>
-									</tr>
-								</thead>
-								<tbody>
-									{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
-								</tbody>
-							</table>
-						)}
-					</div>
-				</div>
+				{this.state.fixtures.map((fixture, i) =>
+					<table key={i}>
+						<thead>
+							<tr>
+								<td colSpan='4'>{moment(fixture[0].match_date).format('MMMM DD, YYYY')}</td>
+							</tr>
+						</thead>
+						<tbody>
+							{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
+						</tbody>
+					</table>
+				)}
 			</section>
 		)
   }

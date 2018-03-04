@@ -1,3 +1,39 @@
+// Section
 section {
-	padding: 0 15px;
+	padding: 10px;
+}
+
+// Table
+table {
+	border-collapse: collapse;
+	margin: 0 0 20px;
+	width: 100%;
+
+	thead {
+		tr {
+			background-color: $dark-white;
+			color: $white;
+
+			td {
+				font-weight: bold;
+				padding: 5px;
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			&:nth-of-type(odd) {
+				background-color: $light-grey;
+			}
+
+			td {
+				padding: 5px;
+
+				&.dataCol {
+					text-align: right;
+				}
+			}
+		}
+	}
 }
