@@ -1,0 +1,23 @@
+.fixture-data {
+	display: none;
+	flex-direction: column;
+	padding: 10px;
+
+	&__score {
+		font-weight: bold;
+		padding: 0 10px;
+	}
+
+	&__goal-scorers {
+		display: flex;
+		flex-direction: column;
+
+		&__time {
+			padding: 0 10px 0 0;
+		}
+	}
+
+	&.--active {
+		display: flex;
+	}
+}

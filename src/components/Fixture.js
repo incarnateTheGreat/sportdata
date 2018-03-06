@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
+import FixtureData from './FixtureData';
 import moment from 'moment';
 import 'moment-timezone';
 
 export default class Fixture extends Component {
-	constructor(props) {
-		super();
-
-		this.openGameData = this.openGameData.bind(this);
-	}
 	convertToLocalTime() {
 		if (this.props.fixture.match_status === 'FT' || this.props.fixture.match_status === 'Postp.') {
 			return this.props.fixture.match_status;
@@ -22,8 +18,21 @@ export default class Fixture extends Component {
 		return modifiedTimeStr.isValid() ? modifiedTimeStr.format('HH:mm') : this.props.fixture.match_time;
 	}
 
-	openGameData() {
-		console.log(this.props);
+	renderMatchData(e) {
+		const node = e.target.parentNode,
+					dataElem = document.getElementById(`${node.id}-data`),
+					allDataElems = document.querySelectorAll('.fixture-data');
+
+		if (dataElem.classList.contains('--active')) {
+			dataElem.classList.remove('--active');
+		} else {
+			// Close all Fixture Data Drawers. This also allows for toggling.
+			allDataElems.forEach(elem => elem.classList.remove('--active'));
+
+			console.log(this.props.fixture);
+
+			dataElem.classList.add('--active');
+		}
 	}
 
 	render() {
@@ -33,11 +42,14 @@ export default class Fixture extends Component {
 						match_awayteam_score } = this.props.fixture;
 
 		return (
-			<div className='fixture-table__row' onClick={this.openGameData}>
-				<div className='fixture-table-row__element'>{this.convertToLocalTime()}</div>
-				<div className='fixture-table-row__element'>{match_hometeam_name}</div>
-				<div className='fixture-table-row__element'>{match_hometeam_score} - {match_awayteam_score}</div>
-				<div className='fixture-table-row__element'>{match_awayteam_name}</div>
+			<div>
+				<div id={`match-${this.props.fixture.match_id}`} className='fixture-table__row' onClick={(e) => this.renderMatchData(e)}>
+					<div className='fixture-table-row__element'>{this.convertToLocalTime()}</div>
+					<div className='fixture-table-row__element'>{match_hometeam_name}</div>
+					<div className='fixture-table-row__element'>{match_hometeam_score} - {match_awayteam_score}</div>
+					<div className='fixture-table-row__element'>{match_awayteam_name}</div>
+				</div>
+				<FixtureData id={`match-${this.props.fixture.match_id}-data`} fixture={this.props.fixture} />
 			</div>
 		);
 	}
