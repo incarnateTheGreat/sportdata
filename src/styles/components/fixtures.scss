@@ -24,7 +24,7 @@
 			}
 
 			&:hover {
-				background-color: $dark-grey;
+				background-color: lighten($dark-grey, 20%);
 				color: $black;
 			}
 
