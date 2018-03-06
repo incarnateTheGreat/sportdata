@@ -4,7 +4,7 @@ import moment from 'moment';
 import 'moment-timezone';
 
 export default class Fixture extends Component {
-	convertToLocalTime() {
+	handleMatchTime() {
 		if (this.props.fixture.match_status === 'FT' || this.props.fixture.match_status === 'Postp.') {
 			return this.props.fixture.match_status;
 		}
@@ -19,7 +19,7 @@ export default class Fixture extends Component {
 	}
 
 	renderMatchData(e) {
-		const node = e.target.parentNode,
+		const node = e.target,
 					dataElem = document.getElementById(`${node.id}-data`),
 					allDataElems = document.querySelectorAll('.fixture-data');
 
@@ -42,12 +42,14 @@ export default class Fixture extends Component {
 						match_awayteam_score } = this.props.fixture;
 
 		return (
-			<div>
-				<div id={`match-${this.props.fixture.match_id}`} className='fixture-table__row' onClick={(e) => this.renderMatchData(e)}>
-					<div className='fixture-table-row__element'>{this.convertToLocalTime()}</div>
-					<div className='fixture-table-row__element'>{match_hometeam_name}</div>
-					<div className='fixture-table-row__element'>{match_hometeam_score} - {match_awayteam_score}</div>
-					<div className='fixture-table-row__element'>{match_awayteam_name}</div>
+			<div id={`match-${this.props.fixture.match_id}`} className='fixture-table__row' onClick={(e) => this.renderMatchData(e)}>
+				<div className='fixture-table__row__scoreline'>
+					<div className='fixture-table__row__scoreline__element'>{match_hometeam_name}</div>
+					<div className='fixture-table__row__scoreline__element'>
+						{match_hometeam_score} - {match_awayteam_score}
+						<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
+					</div>
+					<div className='fixture-table__row__scoreline__element'>{match_awayteam_name}</div>
 				</div>
 				<FixtureData id={`match-${this.props.fixture.match_id}-data`} fixture={this.props.fixture} />
 			</div>

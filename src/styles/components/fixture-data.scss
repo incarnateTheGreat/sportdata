@@ -1,19 +1,38 @@
 .fixture-data {
 	display: none;
 	flex-direction: column;
-	padding: 10px;
+	padding: 10px 0;
+
+	&__header {
+		display: none;
+		font-size: $font-size-large;
+		width: 100%;
+
+		&__team {
+			width: 45%;
+		}
+	}
 
 	&__score {
 		font-weight: bold;
 		padding: 0 10px;
 	}
 
-	&__goal-scorers {
+	&__events {
 		display: flex;
 		flex-direction: column;
 
-		&__time {
-			padding: 0 10px 0 0;
+		&__row {
+			border: 1px solid;
+
+			display: flex;
+
+			&__event {
+				width: 45%;
+			}
+			&__time {
+				padding: 0 10px 0 0;
+			}
 		}
 	}
 
