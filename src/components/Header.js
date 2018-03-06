@@ -7,8 +7,13 @@ class Header extends Component {
 
 		this.navigateTo = this.navigateTo.bind(this);
 	}
+
 	navigateTo(path) {
 		this.props.history.push(path);
+	}
+
+	activeClass(path) {
+		return this.props.location.pathname === path ? 'active' : '';
 	}
 
   render() {
@@ -17,8 +22,8 @@ class Header extends Component {
 				<h1>Sport Data</h1>
 				<nav>
 					<ul>
-						<li onClick={() => this.navigateTo('/')}>Fixtures</li>
-						<li onClick={() => this.navigateTo('/standings')}>Standings</li>
+						<li className={this.activeClass('/')} onClick={() => this.navigateTo('/')}>Fixtures</li>
+						<li className={this.activeClass('/standings')} onClick={() => this.navigateTo('/standings')}>Standings</li>
 					</ul>
 				</nav>
 			</header>

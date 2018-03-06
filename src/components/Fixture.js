@@ -3,6 +3,11 @@ import moment from 'moment';
 import 'moment-timezone';
 
 export default class Fixture extends Component {
+	constructor(props) {
+		super();
+
+		this.openGameData = this.openGameData.bind(this);
+	}
 	convertToLocalTime() {
 		if (this.props.fixture.match_status === 'FT' || this.props.fixture.match_status === 'Postp.') {
 			return this.props.fixture.match_status;
@@ -16,6 +21,11 @@ export default class Fixture extends Component {
 		// Check if the Moment Date is valid. If not, return the original Match Time.
 		return modifiedTimeStr.isValid() ? modifiedTimeStr.format('HH:mm') : this.props.fixture.match_time;
 	}
+
+	openGameData() {
+		console.log(this.props);
+	}
+
 	render() {
 		const { match_hometeam_name,
 						match_hometeam_score,
@@ -23,12 +33,12 @@ export default class Fixture extends Component {
 						match_awayteam_score } = this.props.fixture;
 
 		return (
-			<tr>
-				<td>{this.convertToLocalTime()}</td>
-				<td>{match_hometeam_name}</td>
-				<td>{match_hometeam_score} - {match_awayteam_score}</td>
-				<td>{match_awayteam_name}</td>
-			</tr>
+			<div className='fixture-table__row' onClick={this.openGameData}>
+				<div className='fixture-table-row__element'>{this.convertToLocalTime()}</div>
+				<div className='fixture-table-row__element'>{match_hometeam_name}</div>
+				<div className='fixture-table-row__element'>{match_hometeam_score} - {match_awayteam_score}</div>
+				<div className='fixture-table-row__element'>{match_awayteam_name}</div>
+			</div>
 		);
 	}
 }

@@ -3,25 +3,49 @@
 		display: none;
 	}
 
-	table {
-		tbody {
-			tr {
-				td {
-					width: 35%;
+	.fixture-table {
+		display: flex;
+		flex-direction: column;
+		margin: 0 0 20px;
 
-					&:first-child {
-						width: 5%;
-					}
-					&:nth-of-type(2) {
-						text-align: right;
-					}
-					&:nth-of-type(3) {
-						text-align: center;
-						width: 5%;
-					}
-					&:nth-of-type(4) {
-						text-align: left;
-					}
+		.fixture-table__row {
+			cursor: pointer;
+			display: flex;
+			transition: background-color 0.05s ease-in;
+
+			&:nth-of-type(odd) {
+				background-color: $light-grey;
+			}
+
+			&:hover {
+				background-color: $dark-grey;
+				color: $black;
+			}
+
+			.fixture-table-row__date {
+				background-color: $dark-white;
+				color: $white;
+				font-weight: bold;
+				padding: 5px;
+				width: 100%;
+			}
+
+			.fixture-table-row__element {
+				padding: 5px;
+				width: 45%;
+
+				&:nth-of-type(1) {
+					width: 5%;
+				}
+				&:nth-of-type(2) {
+					text-align: right;
+				}
+				&:nth-of-type(3) {
+					text-align: center;
+					width: 5%;
+				}
+				&:nth-of-type(4) {
+					text-align: left;
 				}
 			}
 		}

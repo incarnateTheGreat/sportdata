@@ -110,16 +110,12 @@ export default class Fixtures extends Component {
 				</div>
 
 				{this.state.fixtures.map((fixture, i) =>
-					<table key={i}>
-						<thead>
-							<tr>
-								<td colSpan='4'>{moment(fixture[0].match_date).format('MMMM DD, YYYY')}</td>
-							</tr>
-						</thead>
-						<tbody>
-							{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
-						</tbody>
-					</table>
+					<div className='fixture-table' key={i}>
+						<div className='fixture-table__row'>
+							<div className='fixture-table-row__date'>{moment(fixture[0].match_date).format('MMMM DD, YYYY')}</div>
+						</div>
+						{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
+					</div>
 				)}
 			</section>
 		)
