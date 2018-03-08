@@ -5,14 +5,16 @@ import 'moment-timezone';
 
 export default class Fixture extends Component {
 	handleMatchTime() {
-		if (this.props.fixture.match_status === 'FT' || this.props.fixture.match_status === 'Postp.') {
+    // Return the Match Status if it's either Live or not a Timestamp.
+		if (this.props.fixture.match_status === 'FT'
+			|| this.props.fixture.match_status === 'Postp.'
+			|| this.props.fixture.match_live === '1') {
 			return this.props.fixture.match_status;
 		}
 
 		const m = moment.utc(this.props.fixture.match_time, 'HH:mm'),
-					tz = moment.tz.guess();
-
-		let modifiedTimeStr = m.clone().tz(tz);
+					tz = moment.tz.guess(),
+          modifiedTimeStr = m.clone().tz(tz);
 
 		// Check if the Moment Date is valid. If not, return the original Match Time.
 		return modifiedTimeStr.isValid() ? modifiedTimeStr.format('HH:mm') : this.props.fixture.match_time;

@@ -17,7 +17,31 @@
 
 			&__event {
 				display: flex;
+				margin: 4px 0;
 				width: 45%;
+
+				.icon {
+					background: url('../images/icons.png') 0 50% no-repeat;
+					height: 100%;
+					// margin: 0 0 0 10px;
+					width: 12px;
+
+					&.yellow-card {
+						background-position: -2px 50%;
+					}
+
+					&.red-card {
+						background-position: -2px 50%;
+					}
+
+					&.goal {
+						background-position: -60px 50%;
+					}
+				}
+
+				.goalscorer, .booked-player {
+					margin: 0 10px;
+				}
 
 				&:nth-of-type(1) {
 					display: flex;

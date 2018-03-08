@@ -48,7 +48,7 @@ export default class Fixtures extends Component {
 	}
 
 	getNextFiveDays() {
-		const twoDaysAgo = moment().subtract(5, 'day').format('YYYY-MM-DD'),
+		const twoDaysAgo = moment().subtract(2, 'day').format('YYYY-MM-DD'),
 					nextFiveDays = moment().add(5, 'day').format('YYYY-MM-DD');
 
 		return { twoDaysAgo, nextFiveDays }
@@ -56,13 +56,12 @@ export default class Fixtures extends Component {
 
 	getFixtures() {
 		const { twoDaysAgo, nextFiveDays } = this.getNextFiveDays(),
-					url = `https://apifootball.com/api/?action=get_events&from=${twoDaysAgo}&to=${nextFiveDays}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
+					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${twoDaysAgo}&to=${nextFiveDays}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
 		let tempArr = [],
 				fixtures = []
 
 		// Return Fixture Data and group by date.
 		this.getData(url).then(data => {
-			console.log(data.data);
 			tempArr = data.data.reduce((r, a) => {
 				r[a.match_date] = r[a.match_date] || [];
 				r[a.match_date].push(a);
