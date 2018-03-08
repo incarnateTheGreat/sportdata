@@ -22,10 +22,12 @@ const booking = (e, i) => {
 			<span className='fixture-data__events__row__event'>
 				{e['home_fault'] !== '' ? <span className='booked-player'>{e['home_fault']}</span> : ''}
 				{e['home_fault'] !== '' && e['card'] === 'yellowcard' ? <span className='icon yellow-card'></span> : ''}
+				{e['home_fault'] !== '' && e['card'] === 'redcard' ? <span className='icon red-card'></span> : ''}
 			</span>
 			<span className='fixture-data__events__row__event'>{e.time}</span>
 			<span className='fixture-data__events__row__event'>
 				{e['away_fault'] && e['card'] === 'yellowcard' ? <span className='icon yellow-card'></span> : ''}
+				{e['away_fault'] && e['card'] === 'redcard' ? <span className='icon red-card'></span> : ''}
 				{e['away_fault'] !== '' ? <span className='booked-player'>{e['away_fault']}</span> : ''}
 			</span>
 		</div>
@@ -34,17 +36,29 @@ const booking = (e, i) => {
 
 export default class FixtureData extends Component {
 	render() {
-		const { id, fixture } = this.props,
-					cardsGoalScorers = [];
+		const { id, fixture } = this.props;
+		let cardsGoalScorers = [], indexToRemove = null;
 
 		// Combine both Cards and Goal Scorers into one Array.
 		for (let x in fixture.cards) cardsGoalScorers.push(fixture.cards[x]);
 		for (let x in fixture.goalscorer) cardsGoalScorers.push(fixture.goalscorer[x])
 
-		// Sort the new Array by Time ASC.
-		cardsGoalScorers.sort((a,b) => a.time > b.time);
+		// Temporarily remove the single-quote tick from the Time attribute for proper sorting.
+		cardsGoalScorers.findIndex((el) => {
+			el.time = el.time.replace("'", "");
+		});
 
-		// console.log(cardsGoalScorers);
+		// Find the array index that contains a now blank string from the replace done above.
+		indexToRemove = cardsGoalScorers.findIndex((el) => !el.time ? el : '');
+
+		// Delete the element from the array.
+		if (indexToRemove || !indexToRemove === -1) delete cardsGoalScorers[indexToRemove];
+
+		// Sort the new Array by Time ASC.
+		cardsGoalScorers.sort((a,b) => a.time - b.time);
+
+		// Replace the single-quote tick back into the Time attribute.
+		cardsGoalScorers.findIndex(el => el.time = `${el.time}'`);
 
 		return (
 			<div id={id} className='fixture-data'>

@@ -23,7 +23,6 @@
 				.icon {
 					background: url('../images/icons.png') 0 50% no-repeat;
 					height: 100%;
-					// margin: 0 0 0 10px;
 					width: 12px;
 
 					&.yellow-card {
@@ -31,7 +30,7 @@
 					}
 
 					&.red-card {
-						background-position: -2px 50%;
+						background-position: -30px 50%;
 					}
 
 					&.goal {
