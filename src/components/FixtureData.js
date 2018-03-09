@@ -37,28 +37,31 @@ const booking = (e, i) => {
 export default class FixtureData extends Component {
 	render() {
 		const { id, fixture } = this.props;
-		let cardsGoalScorers = [], indexToRemove = null;
+		let cardsGoalScorers = [],
+				indexToRemove = null;
 
 		// Combine both Cards and Goal Scorers into one Array.
 		for (let x in fixture.cards) cardsGoalScorers.push(fixture.cards[x]);
 		for (let x in fixture.goalscorer) cardsGoalScorers.push(fixture.goalscorer[x])
 
 		// Temporarily remove the single-quote tick from the Time attribute for proper sorting.
-		cardsGoalScorers.findIndex((el) => {
+		cardsGoalScorers.findIndex(el => {
 			el.time = el.time.replace("'", "");
 		});
 
 		// Find the array index that contains a now blank string from the replace done above.
-		indexToRemove = cardsGoalScorers.findIndex((el) => !el.time ? el : '');
+		indexToRemove = cardsGoalScorers.findIndex(el => !el.time ? el : '');
 
 		// Delete the element from the array.
-		if (indexToRemove || !indexToRemove === -1) delete cardsGoalScorers[indexToRemove];
+		cardsGoalScorers = cardsGoalScorers.filter(e => e.time !== "" ? e : null)
 
 		// Sort the new Array by Time ASC.
 		cardsGoalScorers.sort((a,b) => a.time - b.time);
 
 		// Replace the single-quote tick back into the Time attribute.
-		cardsGoalScorers.findIndex(el => el.time = `${el.time}'`);
+		cardsGoalScorers.findIndex(el => {
+			el.time = `${el.time}'`;
+		});
 
 		return (
 			<div id={id} className='fixture-data'>
