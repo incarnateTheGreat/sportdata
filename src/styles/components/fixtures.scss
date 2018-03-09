@@ -9,11 +9,17 @@
 		margin: 0 0 20px;
 
 		.fixture-table__row {
+			border-bottom: 1px solid $black;
 			cursor: pointer;
 			display: flex;
+			font-size: $font-size-xmedium;
 			flex-direction: column;
 			padding: 10px 0;
 			transition: background-color 0.05s ease-in;
+
+			&:last-child {
+				border: none;
+			}
 
 			& > * {
 				pointer-events: none;
@@ -24,8 +30,10 @@
 			}
 
 			&:hover {
-				background-color: lighten($dark-grey, 20%);
-				color: $black;
+				& > .fixture-table__row__scoreline {
+					color: lighten($black, 30%);
+					text-decoration: underline;
+				}
 			}
 
 			&.date {
@@ -66,6 +74,19 @@
 				display: flex;
 				padding: 5px 0 0;
 				justify-content: center;
+			}
+
+			&--disabled {
+				pointer-events: none;
+
+				&:hover {
+					color: $black;
+					cursor: default;
+
+					& > .fixture-table__row__scoreline {
+						text-decoration: none;
+					}
+				}
 			}
 		}
 	}
