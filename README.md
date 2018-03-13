@@ -25,9 +25,11 @@ npm install
 1) From the Command Line, run `npm start`.
 2) Navigate to `http://localhost:3030/`.
 
-## Colours
+## CORS
 
 You might experience CORS issues. Either use a CORS plugin to disable it, or operate a browser with security disabled to test this.
+
+## Tech Stack
 
 Using:
 
