@@ -1,1 +1,71 @@
-.standings {}
+.standings {
+  table {
+    tr {
+      td, th {
+        text-align: center;
+
+        &.--non-numeric {
+          text-align: left;
+        }
+      }
+      td {
+        padding: 8px 0;
+      }
+    }
+    tbody {
+      tr {
+        // The first two elements.
+        &:nth-child(-n+2) {
+          background-color: $green;
+          color: $white;
+        }
+
+        // Elements' three through six.
+        &:nth-child(n+3):nth-child(-n+6) {
+          background-color: $primary-blue;
+          color: $white;
+        }
+
+        // The last three elements.
+        &:nth-last-child(-n+3) {
+          background-color: $dark-red;
+          color: $white;
+        }
+      }
+    }
+  }
+
+  .standings-legend {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 300px;
+
+    &__row {
+      display: flex;
+      padding: 5px 0;
+
+      &__icon {
+        height: 15px;
+        width: 15px;
+
+        &.--promotion {
+          background-color: $green;
+        }
+
+        &.--playoffs {
+          background-color: $primary-blue;
+        }
+
+        &.--relegation {
+          background-color: $dark-red;
+        }
+      }
+
+      &__label {
+        font-weight: bold;
+        padding: 0 0 0 10px;
+      }
+    }
+  }
+}

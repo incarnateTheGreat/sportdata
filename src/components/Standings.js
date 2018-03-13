@@ -19,7 +19,6 @@ class Standings extends Component {
 
 		// Return Standings Data.
 		this.getData(url).then(data => {
-			console.log(data.data);
 			const standings = data.data;
 
 			// Sort Standings by Overall Standings ASC (default).
@@ -37,34 +36,51 @@ class Standings extends Component {
 		return (
 			<section className='standings'>
 				{this.state.standings ? (
-					<table>
-						<thead>
-							<tr>
-								<td width='5%'>#</td>
-								<td width='45%'>Team</td>
-								<td width='5%'>MP</td>
-								<td width='5%'>W</td>
-								<td width='5%'>D</td>
-								<td width='5%'>L</td>
-								<td width='5%'>G</td>
-								<td width='5%'>Pts</td>
-							</tr>
-						</thead>
-						<tbody>
-							{this.state.standings.map((s, i) =>
-								<tr key={i}>
-									<td>{s.overall_league_position}</td>
-									<td>{s.team_name}</td>
-									<td>{s.overall_league_payed}</td>
-									<td>{s.overall_league_W}</td>
-									<td>{s.overall_league_D}</td>
-									<td>{s.overall_league_L}</td>
-									<td>{s.overall_league_GF}:{s.overall_league_GA}</td>
-									<td>{s.overall_league_PTS}</td>
+					<div>
+						<table>
+							<thead>
+								<tr>
+									<th width='5%'>#</th>
+									<th width='45%' className='--non-numeric'>Team</th>
+									<th width='5%'>MP</th>
+									<th width='5%'>W</th>
+									<th width='5%'>D</th>
+									<th width='5%'>L</th>
+									<th width='5%'>G</th>
+									<th width='5%'>Pts</th>
 								</tr>
-							)}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{this.state.standings.map((s, i) =>
+									<tr key={i} className={`--position-${s.overall_league_position}`}>
+										<td>{s.overall_league_position}</td>
+										<td className='--non-numeric'>{s.team_name}</td>
+										<td>{s.overall_league_payed}</td>
+										<td>{s.overall_league_W}</td>
+										<td>{s.overall_league_D}</td>
+										<td>{s.overall_league_L}</td>
+										<td>{s.overall_league_GF}:{s.overall_league_GA}</td>
+										<td>{s.overall_league_PTS}</td>
+									</tr>
+								)}
+							</tbody>
+						</table>
+
+						<div className='standings-legend'>
+							<div className='standings-legend__row'>
+								<span className='standings-legend__row__icon --promotion'>&nbsp;</span>
+								<span className='standings-legend__row__label'>Promotion</span>
+							</div>
+							<div className='standings-legend__row'>
+								<span className='standings-legend__row__icon --playoffs'>&nbsp;</span>
+								<span className='standings-legend__row__label'>Play-Offs</span>
+							</div>
+							<div className='standings-legend__row'>
+								<span className='standings-legend__row__icon --relegation'>&nbsp;</span>
+								<span className='standings-legend__row__label'>Relegation</span>
+							</div>
+						</div>
+					</div>
 				) : ''}
 			</section>
 		);
