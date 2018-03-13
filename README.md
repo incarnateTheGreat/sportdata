@@ -1,6 +1,8 @@
 # Sport Data
 
-This application utilizes the [APIFootball](https://apifootball.com) to gather data. Note: it only displays content from the England's Championship League.
+This application utilizes the [APIFootball](https://apifootball.com) to gather data.
+
+**Note:** it only displays content from the England's Championship League.
 
 ## Installation
 
