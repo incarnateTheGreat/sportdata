@@ -50,7 +50,7 @@ export default class FixtureData extends Component {
 		cardsGoalScorers = cardsGoalScorers.filter(e => e.time !== "" ? e : null)
 
 		// Sort the new Array by Time ASC.
-		cardsGoalScorers.sort((a,b) => a.time - b.time);
+		cardsGoalScorers.sort((a, b) => a.time - b.time);
 
 		// Replace the single-quote tick back into the Time attribute.
 		cardsGoalScorers.forEach(el => el.time = `${el.time}'`);

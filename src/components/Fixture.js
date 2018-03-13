@@ -6,16 +6,15 @@ import 'moment-timezone';
 
 export default class Fixture extends Component {
 	handleMatchTime() {
-    // Return the Match Status if it's either Live or not a Timestamp.
-		if (this.props.fixture.match_status === 'FT'
-			|| this.props.fixture.match_status === 'Postp.'
-			|| this.props.fixture.match_live === '1') {
+		// Return the Match Status if it's either Live or not a Timestamp.
+		if ((this.props.fixture.match_status === 'FT' || this.props.fixture.match_status === 'Postp.')
+			&& this.props.fixture.match_live === '1') {
 			return this.props.fixture.match_status;
 		}
 
 		const m = moment.utc(this.props.fixture.match_time, 'HH:mm'),
 					tz = moment.tz.guess(),
-          modifiedTimeStr = m.clone().tz(tz);
+					modifiedTimeStr = m.clone().tz(tz);
 
 		// Check if the Moment Date is valid. If not, return the original Match Time.
 		return modifiedTimeStr.isValid() ? modifiedTimeStr.format('HH:mm') : this.props.fixture.match_time;
@@ -23,26 +22,31 @@ export default class Fixture extends Component {
 
 	renderMatchData(e) {
 		const node = e.target,
-					dataElem = document.getElementById(`${node.id}-data`),
+					nodeElem = document.getElementById(`${node.id}-data`),
 					allDataElems = document.querySelectorAll('.fixture-data');
 
-		if (dataElem.classList.contains('--active')) {
-			dataElem.classList.remove('--active');
+		if (nodeElem.classList.contains('--active')) {
+			nodeElem.classList.remove('--active');
 		} else {
 			// Close all Fixture Data Drawers. This also allows for toggling.
 			allDataElems.forEach(elem => elem.classList.remove('--active'));
 
 			console.log(this.props.fixture);
 
-			dataElem.classList.add('--active');
+			nodeElem.classList.add('--active');
 		}
 	}
 
 	setMatchRowClass() {
+		const fixture = this.props.fixture,
+					disabled = (fixture.match_status === "Postp."
+											|| fixture.match_live === "0"
+											|| (fixture.match_awayteam_score === "?" && fixture.match_hometeam_score === "?"));
+
 		return classNames(
-	    'fixture-table__row',
-	    this.props.fixture.match_status === "Postp." ? 'fixture-table__row--disabled' : null
-	  );
+			'fixture-table__row',
+			disabled ? 'fixture-table__row--disabled' : null
+		);
 	}
 
 	render() {

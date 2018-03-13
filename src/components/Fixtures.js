@@ -48,7 +48,7 @@ export default class Fixtures extends Component {
 	}
 
 	getNextFiveDays() {
-		const twoDaysAgo = moment().subtract(12, 'day').format('YYYY-MM-DD'),
+		const twoDaysAgo = moment().subtract(5, 'day').format('YYYY-MM-DD'),
 					nextFiveDays = moment().add(5, 'day').format('YYYY-MM-DD');
 
 		return { twoDaysAgo, nextFiveDays }
@@ -70,6 +70,9 @@ export default class Fixtures extends Component {
 
 			// In order to loop through the array, we will push the objects into an array format.
 			for(let x in tempArr) fixtures.push(tempArr[x]);
+
+			// Make today's or the most current fixtures listed first.
+			fixtures.reverse();
 
 			// Apply into the State.
 			this.setState({ fixtures });
