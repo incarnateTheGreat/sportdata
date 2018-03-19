@@ -1,5 +1,5 @@
 .standings {
-  .standings-wrapper {
+  &__wrapper {
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -42,11 +42,11 @@
       }
     }
 
-    .standings-legend {
+    .standings__legend {
       display: flex;
       flex-direction: row;
       justify-content: space-around;
-      width: 300px;
+      width: 450px;
 
       &__row {
         display: flex;
@@ -78,10 +78,16 @@
   }
 
   @include respond-to(sm-max) {
-    .standings-wrapper {
+    .standings__wrapper {
       table {
         width: 100%;
       }
+    }
+  }
+
+  @include respond-to(xs-max) {
+    .standings__legend {
+      width: 100%;
     }
   }
 }

@@ -36,7 +36,7 @@ class Standings extends Component {
 		return (
 			<section className='standings'>
 				{this.state.standings ? (
-					<div className='standings-wrapper'>
+					<div className='standings__wrapper'>
 						<table>
 							<thead>
 								<tr>
@@ -66,18 +66,18 @@ class Standings extends Component {
 							</tbody>
 						</table>
 
-						<div className='standings-legend'>
-							<div className='standings-legend__row'>
-								<span className='standings-legend__row__icon --promotion'>&nbsp;</span>
-								<span className='standings-legend__row__label'>Promotion</span>
+						<div className='standings__legend'>
+							<div className='standings__legend__row'>
+								<span className='standings__legend__row__icon --promotion'>&nbsp;</span>
+								<span className='standings__legend__row__label'>Promotion</span>
 							</div>
-							<div className='standings-legend__row'>
-								<span className='standings-legend__row__icon --playoffs'>&nbsp;</span>
-								<span className='standings-legend__row__label'>Play-Offs</span>
+							<div className='standings__legend__row'>
+								<span className='standings__legend__row__icon --playoffs'>&nbsp;</span>
+								<span className='standings__legend__row__label'>Play-Offs</span>
 							</div>
-							<div className='standings-legend__row'>
-								<span className='standings-legend__row__icon --relegation'>&nbsp;</span>
-								<span className='standings-legend__row__label'>Relegation</span>
+							<div className='standings__legend__row'>
+								<span className='standings__legend__row__icon --relegation'>&nbsp;</span>
+								<span className='standings__legend__row__label'>Relegation</span>
 							</div>
 						</div>
 					</div>
