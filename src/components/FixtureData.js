@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 
 const goalscorer = (e, i) => {
 	return (
@@ -34,6 +35,36 @@ const booking = (e, i) => {
 	)
 };
 
+const checkBookingHistory = (cardsGoalScorers) => {
+	const bookings = cardsGoalScorers.filter(record => record['card'] !== undefined),
+				player = bookings.find(player => {
+					return player['card'] === 'redcard';
+				});
+
+	let counter = 0,
+			playerCounter = {},
+			bookingsCopy = bookings;
+
+	if(player) {
+		// get player name and use it to find duplicates in the loop below.
+		const playerName = player['home_fault'] || player['away_fault'];
+
+		for (let x in bookings) {
+			if (_.isMatch(bookings[x], {'away_fault': playerName})) {
+				playerCounter[x] = bookings[x];
+			}
+			if (_.isMatch(bookings[x], {'home_fault': playerName})) {
+				playerCounter[x] = bookings[x];
+			}
+		}
+
+		if (Object.keys(playerCounter).length >= 2) {
+			console.log('swap red for yellow/red.');
+			console.log(playerCounter);
+		}
+	}
+}
+
 export default class FixtureData extends Component {
 	render() {
 		const { id, fixture } = this.props;
@@ -54,6 +85,10 @@ export default class FixtureData extends Component {
 
 		// Replace the single-quote tick back into the Time attribute.
 		cardsGoalScorers.forEach(el => el.time = `${el.time}'`);
+
+		checkBookingHistory(cardsGoalScorers);
+
+		// cardsGoalScorers = checkBookingHistory(cardsGoalScorers);
 
 		return (
 			<div id={id} className='fixture-data'>
