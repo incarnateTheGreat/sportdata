@@ -23,11 +23,13 @@ const booking = (e, i) => {
 			<span className='fixture-data__events__row__event'>
 				{e['home_fault'] !== '' ? <span className='booked-player'>{e['home_fault']}</span> : ''}
 				{e['home_fault'] !== '' && e['card'] === 'yellowcard' ? <span className='icon yellow-card'></span> : ''}
+				{e['home_fault'] !== '' && e['card'] === 'yellow-red' ? <span className='icon yellow-red-card'></span> : ''}
 				{e['home_fault'] !== '' && e['card'] === 'redcard' ? <span className='icon red-card'></span> : ''}
 			</span>
 			<span className='fixture-data__events__row__event'>{e.time}</span>
 			<span className='fixture-data__events__row__event'>
 				{e['away_fault'] && e['card'] === 'yellowcard' ? <span className='icon yellow-card'></span> : ''}
+				{e['away_fault'] && e['card'] === 'yellow-red' ? <span className='icon yellow-red-card'></span> : ''}
 				{e['away_fault'] && e['card'] === 'redcard' ? <span className='icon red-card'></span> : ''}
 				{e['away_fault'] !== '' ? <span className='booked-player'>{e['away_fault']}</span> : ''}
 			</span>
@@ -35,32 +37,41 @@ const booking = (e, i) => {
 	)
 };
 
-const checkBookingHistory = (cardsGoalScorers) => {
+const refineDoubleBooking = (cardsGoalScorers) => {
 	const bookings = cardsGoalScorers.filter(record => record['card'] !== undefined),
-				player = bookings.find(player => {
-					return player['card'] === 'redcard';
-				});
+				redCardPlayer = bookings.find(player => player['card'] === 'redcard');
 
-	let counter = 0,
-			playerCounter = {},
-			bookingsCopy = bookings;
+	if (redCardPlayer) {
+		// Get Player Name and use it to find duplicates in the loop below.
+		const redCardPlayerName = redCardPlayer['home_fault'] || redCardPlayer['away_fault'];
 
-	if(player) {
-		// get player name and use it to find duplicates in the loop below.
-		const playerName = player['home_fault'] || player['away_fault'];
+		// TODO: Keep this for now. Might need it later?
+		// Looks for multiple instances of Yellow Cards for the Red-Carded Player.
+		// const b = _.filter(bookings, (o) => {
+		// 	if ((o['away_fault'] === redCardPlayerName || o['home_fault'] === redCardPlayerName) &&
+		// 			o['card'] === 'yellowcard') {
+		// 		return o
+		// 	}
+		// }).length;
 
-		for (let x in bookings) {
-			if (_.isMatch(bookings[x], {'away_fault': playerName})) {
-				playerCounter[x] = bookings[x];
-			}
-			if (_.isMatch(bookings[x], {'home_fault': playerName})) {
-				playerCounter[x] = bookings[x];
-			}
-		}
+		// If the Red-Carded Player had accumlated 2 Yellow Cards, then find the 2nd
+		// Yellow Card and the Red Card and swap them out for the hybrod Yellow/Red.
+		const yellowIndex = _.findLastIndex(cardsGoalScorers, (player) => {
+			return ((player['home_fault'] === redCardPlayerName || player['away_fault'] === redCardPlayerName)
+							&& player['card'] === 'yellowcard')
+		});
 
-		if (Object.keys(playerCounter).length >= 2) {
-			console.log('swap red for yellow/red.');
-			console.log(playerCounter);
+		const redIndex = _.findLastIndex(cardsGoalScorers, (player) => {
+			return ((player['home_fault'] === redCardPlayerName || player['away_fault'] === redCardPlayerName)
+							&& player['card'] === 'redcard')
+		});
+
+		// If yellowIndex returns undefined, then ignore it. Otherwise,
+		// replace the second Yellow Card with 'yellow-red' and
+		// remove the related Red Card.
+		if (yellowIndex !== -1) {
+			cardsGoalScorers[yellowIndex]['card'] = 'yellow-red';
+			cardsGoalScorers.splice(redIndex, 1);
 		}
 	}
 }
@@ -86,9 +97,9 @@ export default class FixtureData extends Component {
 		// Replace the single-quote tick back into the Time attribute.
 		cardsGoalScorers.forEach(el => el.time = `${el.time}'`);
 
-		checkBookingHistory(cardsGoalScorers);
-
-		// cardsGoalScorers = checkBookingHistory(cardsGoalScorers);
+		// If a player has a Second Yellow Card, remove it and the following Red Card
+		// and reolace it with a Yellow-Red Card.
+		refineDoubleBooking(cardsGoalScorers);
 
 		return (
 			<div id={id} className='fixture-data'>

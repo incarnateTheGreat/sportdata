@@ -48,7 +48,7 @@ export default class Fixtures extends Component {
 	}
 
 	getNextFiveDays() {
-		const from = moment().subtract(7, 'day').format('YYYY-MM-DD'),
+		const from = moment().subtract(10, 'day').format('YYYY-MM-DD'),
 					to = moment().add(5, 'day').format('YYYY-MM-DD');
 
 		return { from, to }
@@ -72,7 +72,7 @@ export default class Fixtures extends Component {
 			for(let x in tempArr) fixtures.push(tempArr[x]);
 
 			// Make today's or the most current fixtures listed first.
-			// fixtures.reverse();
+			fixtures.reverse();
 
 			// Apply into the State.
 			this.setState({ fixtures });
