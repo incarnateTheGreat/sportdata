@@ -61,7 +61,7 @@ export default class Fixture extends Component {
 		// Find Red Cards for the Side being evaluated and create Red Card elements.
 		for (let i = 0; i < redCards.length; i++) {
 			if (redCards[i][side] > 0) {
-				arrayRedCardsElems.push(<span className='icon red-card'></span>);
+				arrayRedCardsElems.push(<span className='icon red-card' key={i}></span>);
 			}
 		}
 
