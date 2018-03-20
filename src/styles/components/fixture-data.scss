@@ -20,29 +20,6 @@
 				margin: 4px 0;
 				width: 45%;
 
-				.icon {
-					background: url('../images/icons.png') 0 50% no-repeat;
-					background-position-y: 50%;
-					height: 100%;
-					width: 12px;
-
-					&.yellow-card {
-						background-position-x: -2px;
-					}
-
-					&.red-card {
-						background-position-x: -30px;
-					}
-
-					&.yellow-red-card {
-						background-position-x: -240px;
-					}
-
-					&.goal {
-						background-position-x: -60px;
-					}
-				}
-
 				.goalscorer, .booked-player {
 					margin: 0 10px;
 				}
