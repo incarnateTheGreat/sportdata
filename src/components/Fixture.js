@@ -75,17 +75,17 @@ export default class Fixture extends Component {
 		return (
 			<div id={`match-${this.props.fixture.match_id}`} className={this.setMatchRowClass()} onClick={(e) => this.renderMatchData(e)}>
 				<div className='fixture-table__row__scoreline'>
-					<div className='fixture-table__row__scoreline__element'>
-						<div className='fixture-table__row__scoreline__red-cards'>{this.displayRedCards('home')}</div>
+					<div className='fixture-table__row__element'>
+						<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
 						<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
 					</div>
-					<div className='fixture-table__row__scoreline__element --score'>
+					<div className='fixture-table__row__element --score'>
 						{match_hometeam_score} - {match_awayteam_score}
 						<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
 					</div>
-					<div className='fixture-table__row__scoreline__element'>
+					<div className='fixture-table__row__element'>
 						<span>{match_awayteam_name}</span>
-						<div className='fixture-table__row__scoreline__red-cards'>{this.displayRedCards('away')}</div>
+						<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
 					</div>
 				</div>
 				<FixtureData id={`match-${this.props.fixture.match_id}-data`} fixture={this.props.fixture} />

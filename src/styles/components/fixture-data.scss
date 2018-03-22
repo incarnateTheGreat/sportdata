@@ -42,9 +42,9 @@
 				  align-items: flex-start;
 				}
 
-				@include respond-to(xs-max) {
+				@include respond-to(sm-max) {
 					&.--time {
-						width: 15%;
+						width: 19%;
 					}
 				}
 			}
