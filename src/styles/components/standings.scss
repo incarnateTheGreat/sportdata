@@ -20,6 +20,8 @@
         }
       }
       tbody {
+        font-size: $font-size-xmedium;
+
         tr {
           // The first two elements.
           &:nth-child(-n+2) {
