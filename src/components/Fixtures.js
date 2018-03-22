@@ -49,7 +49,7 @@ export default class Fixtures extends Component {
 
 	getNextFiveDays() {
 		const from = moment().subtract(10, 'day').format('YYYY-MM-DD'),
-					to = moment().add(5, 'day').format('YYYY-MM-DD');
+					to = moment().add(10, 'day').format('YYYY-MM-DD');
 
 		return { from, to }
 	}
@@ -95,7 +95,6 @@ export default class Fixtures extends Component {
 					<button type='button' value='' onClick={this.getTeamSchedule}>Get Team Schedule</button>
 					<h2>{this.state.teamName}</h2>
 					<img src={this.state.teamLogo} alt=''/>
-
 					{this.state.teamSchedule ? (
 						<table>
 							<tbody>
@@ -110,7 +109,6 @@ export default class Fixtures extends Component {
 						</table>
 					) : ''}
 				</div>
-
 				{this.state.fixtures.map((fixture, i) =>
 					<div className='fixture-table' key={i}>
 						<div className='fixture-table__row date'>

@@ -50,9 +50,7 @@ export default class Fixture extends Component {
 	}
 
 	displayRedCards(side) {
-		const { match_hometeam_name,
-						match_awayteam_name,
-						statistics } = this.props.fixture;
+		const { statistics } = this.props.fixture;
 		let arrayRedCardsElems = [];
 
 		// Filter out Statistics and keep the Red Cards.
@@ -79,7 +77,7 @@ export default class Fixture extends Component {
 				<div className='fixture-table__row__scoreline'>
 					<div className='fixture-table__row__scoreline__element'>
 						<div className='fixture-table__row__scoreline__red-cards'>{this.displayRedCards('home')}</div>
-						<span>{match_hometeam_name}</span>
+						<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
 					</div>
 					<div className='fixture-table__row__scoreline__element --score'>
 						{match_hometeam_score} - {match_awayteam_score}

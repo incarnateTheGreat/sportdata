@@ -8,7 +8,7 @@ const goalscorer = (e, i) => {
 				{e['home_scorer'] !== '' ? <span className='goalscorer'>{e['home_scorer']}</span> : ''}
 				{e['home_scorer'] !== '' ? <span className='icon goal'></span> : ''}
 			</span>
-			<span className='fixture-data__events__row__event'>{e.time}</span>
+			<span className='fixture-data__events__row__event --time'>{e.time}</span>
 			<span className='fixture-data__events__row__event'>
 				{e['away_scorer'] !== '' ? <span className='icon goal'></span> : ''}
 				{e['away_scorer'] !== '' ? <span className='goalscorer'>{e['away_scorer']}</span> : ''}
@@ -26,7 +26,7 @@ const booking = (e, i) => {
 				{e['home_fault'] !== '' && e['card'] === 'yellow-red' ? <span className='icon yellow-red-card'></span> : ''}
 				{e['home_fault'] !== '' && e['card'] === 'redcard' ? <span className='icon red-card'></span> : ''}
 			</span>
-			<span className='fixture-data__events__row__event'>{e.time}</span>
+			<span className='fixture-data__events__row__event --time'>{e.time}</span>
 			<span className='fixture-data__events__row__event'>
 				{e['away_fault'] && e['card'] === 'yellowcard' ? <span className='icon yellow-card'></span> : ''}
 				{e['away_fault'] && e['card'] === 'yellow-red' ? <span className='icon yellow-red-card'></span> : ''}

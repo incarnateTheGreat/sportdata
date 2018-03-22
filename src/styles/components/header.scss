@@ -9,18 +9,19 @@ header {
 
 	nav {
 		background-color: $dark-white;
-		padding: 5px 15px;
+		padding: 0 15px;
 
 		ul {
 			display: flex;
 			list-style: none;
 
 			li {
-				margin: 0 15px 0 0;
+				padding: 10px;
 
 				&:hover, &.active {
+					background-color: $dark-grey;
+					color: $black;
 					cursor: pointer;
-					color: $dark-grey;
 				}
 			}
 		}
