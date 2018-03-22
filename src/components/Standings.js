@@ -37,7 +37,7 @@ class Standings extends Component {
 			<section className='standings'>
 				{this.state.standings ? (
 					<div className='standings__wrapper'>
-						<table>
+						<table className='standings__table'>
 							<thead>
 								<tr>
 									<th width='5%'>#</th>

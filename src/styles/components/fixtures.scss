@@ -1,4 +1,6 @@
 .fixtures {
+	width: 65%;
+
 	.teamData {
 		display: none;
 	}
@@ -63,7 +65,7 @@
 				&:nth-of-type(2) {
 					font-weight: bold;
 					text-align: center;
-					width: 10%;
+					width: 20%;
 
 					@include respond-to(sm-max) {
 						width: 20%;
@@ -104,5 +106,9 @@
 				}
 			}
 		}
+	}
+
+	@include respond-to(sm-max) {
+		width: 100%;
 	}
 }
