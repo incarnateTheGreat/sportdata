@@ -59,7 +59,6 @@
 		justify-content: center;
 
 		&__title {
-			border-bottom: 1px solid $dark-grey;
 			font-size: $font-size-medium;
 			font-weight: 600;
 			margin: 0 0 10px;
@@ -76,7 +75,7 @@
 			&__event {
 				display: flex;
 				margin: 4px 0;
-				width: 45%;
+				width: 35%;
 
 				&:nth-of-type(1) {
 					display: flex;
@@ -92,11 +91,6 @@
 				  align-items: flex-start;
 				}
 
-				@include respond-to(sm-max) {
-					&.--type {
-						width: 50%;
-					}
-				}
 				@include respond-to(xs-max) {
 					&.--type {
 						width: 85%;
