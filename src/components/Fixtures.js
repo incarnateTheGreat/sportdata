@@ -49,7 +49,7 @@ export default class Fixtures extends Component {
 
 	getNextFiveDays() {
 		const from = moment().subtract(10, 'day').format('YYYY-MM-DD'),
-					to = moment().add(10, 'day').format('YYYY-MM-DD');
+					to = moment().add(1, 'day').format('YYYY-MM-DD');
 
 		return { from, to }
 	}

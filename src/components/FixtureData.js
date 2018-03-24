@@ -37,6 +37,16 @@ const booking = (e, i) => {
 	)
 };
 
+const statistic = (e, i) => {
+	return (
+		<div className='fixture-data__statistics__row' key={i}>
+			<span className='fixture-data__statistics__row__event'>{e['home']}</span>
+			<span className='fixture-data__statistics__row__event --type'>{e['type']}</span>
+			<span className='fixture-data__statistics__row__event'>{e['away']}</span>
+		</div>
+	)
+};
+
 const refineDoubleBooking = (cardsGoalScorers) => {
 	const bookings = cardsGoalScorers.filter(record => record['card'] !== undefined),
 				redCardPlayer = bookings.find(player => player['card'] === 'redcard');
@@ -108,6 +118,14 @@ export default class FixtureData extends Component {
 						e.hasOwnProperty('home_scorer') ? goalscorer(e, i) : booking(e, i)
 					)}
 				</div>
+				{fixture.statistics.length > 0 && (
+					<div className='fixture-data__statistics'>
+						<span className='fixture-data__statistics__title'>Match Stats</span>
+						{fixture.statistics.map((e, i) =>
+							statistic(e, i)
+						)}
+					</div>
+				)}
 			</div>
 		);
 	}
