@@ -1,0 +1,11 @@
+.h2h-data {
+  display: none;
+	flex-direction: column;
+	padding: 10px 0;
+
+  border: 1px dashed red;
+
+  &.--active {
+    display: flex;
+  }
+}

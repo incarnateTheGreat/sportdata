@@ -54,8 +54,16 @@ table {
 	position: absolute;
 	width: 100%;
 
+	&.--statistics {
+		background-color: transparent;
+		height: auto;
+		position: relative;
+		width: auto;
+	}
+
 	&.--hide-loader {
 		background-color: transparent;
+		display: none;
 		height: 0;
 		width: 0;
 	}

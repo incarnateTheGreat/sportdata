@@ -36,11 +36,11 @@ class App extends Component {
 		return (
 			<div className='App'>
 				<div className={'loading-spinner ' + (this.state.loading ? null : '--hide-loader')}>
-	        <ScaleLoader
-	          color={'#123abc'}
-	          loading={this.state.loading}
-	        />
-	      </div>
+					<ScaleLoader
+						color={'#123abc'}
+						loading={this.state.loading}
+					/>
+				</div>
 				<Header />
 				<Main />
 			</div>
