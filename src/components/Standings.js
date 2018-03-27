@@ -7,8 +7,11 @@ class Standings extends Component {
 		super();
 
 		this.state = {
-			standings: null
+			standings: null,
+			sortDirectin: 'ASC'
 		}
+
+		this.sortTable = this.sortTable.bind(this);
 	}
 	async getData(url) {
 		return await axios(url);
@@ -21,11 +24,38 @@ class Standings extends Component {
 		this.getData(url).then(data => {
 			const standings = data.data;
 
+			console.log(data.data);
+
 			// Sort Standings by Overall Standings ASC (default).
 			standings.sort((a,b) => a.overall_league_position - b.overall_league_position)
 
 			this.setState({ standings })
 		});
+	}
+
+	sortTable(column) {
+		const columnID = column.target.id;
+		let standings = null,
+				sortDirectin = '';
+
+		console.log(columnID);
+
+		if (this.state.standings) {
+			standings = this.state.standings;
+
+			if (this.state.sortDirectin === 'ASC') {
+				standings.sort((a, b) => b[columnID] - a[columnID]);
+				sortDirectin = 'DESC';
+			} else {
+				standings.sort((a, b) => a[columnID] - b[columnID]);
+				sortDirectin = 'ASC';
+			}
+
+
+			this.setState({ standings, sortDirectin }, () => {
+				console.log(this.state);
+			});
+		}
 	}
 
 	componentDidMount() {
@@ -40,14 +70,16 @@ class Standings extends Component {
 						<table className='standings__table'>
 							<thead>
 								<tr>
-									<th width='5%'>#</th>
-									<th width='45%' className='--non-numeric'>Team</th>
-									<th width='5%'>MP</th>
-									<th width='5%'>W</th>
-									<th width='5%'>D</th>
-									<th width='5%'>L</th>
-									<th width='5%'>G</th>
-									<th width='5%'>Pts</th>
+									<th width='5%' id='overall_league_position' onClick={(e) => this.sortTable(e)}>
+										# <span className='standings__arrow'></span>
+									</th>
+									<th width='45%' id='team_name' className='--non-numeric' onClick={(e) => this.sortTable(e)}>Team</th>
+									<th width='5%' id='overall_league_GF' onClick={(e) => this.sortTable(e)}>MP</th>
+									<th width='5%' id='overall_league_W' onClick={(e) => this.sortTable(e)}>W</th>
+									<th width='5%' id='overall_league_D' onClick={(e) => this.sortTable(e)}>D</th>
+									<th width='5%' id='overall_league_L' onClick={(e) => this.sortTable(e)}>L</th>
+									<th width='5%' id='overall_league_GoalDifference' onClick={(e) => this.sortTable(e)}>G</th>
+									<th width='5%' id='overall_league_PTS' onClick={(e) => this.sortTable(e)}>Pts</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -65,7 +97,6 @@ class Standings extends Component {
 								)}
 							</tbody>
 						</table>
-
 						<div className='standings__legend'>
 							<div className='standings__legend__row'>
 								<span className='standings__legend__row__icon --promotion'>&nbsp;</span>
