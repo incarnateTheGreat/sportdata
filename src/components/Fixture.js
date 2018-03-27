@@ -47,15 +47,16 @@ export default class Fixture extends Component {
 			allDataElems.forEach(elem => elem.classList.remove('--active'));
 			allH2HElems.forEach(elem => elem.classList.remove('--active'));
 
-			console.log(fixture);
-
 			// Sets the selected Fixture Data Drawer to Active.
 			nodeElem.classList.add('--active');
 
 			// If a Match is has not been played, render the H2H Data.
 			if (fixture.match_live !== "1") {
-				this.getH2HData(fixture);
 				nodeH2HElem.classList.add('--active');
+
+				// If the Fixture H2H State data has already been collected and stored
+				// in the State, then do not call for it again.
+				if (!this.state.h2h_data) this.getH2HData(fixture);
 			}
 		}
 	}
@@ -76,10 +77,10 @@ export default class Fixture extends Component {
 
 		this.setState({ isLoading: true }, () => {
 			this.getData(url).then(data => {
-				this.setState({
+				this.setState(prevState => ({
 					isLoading: false,
 					h2h_data: data.data
-				});
+				}));
 			});
 		});
 	}
@@ -123,7 +124,7 @@ export default class Fixture extends Component {
 						<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
 					</div>
 					<div className='fixture-table__row__element'>
-						<span>{match_awayteam_name}</span>
+						<span className='fixture-table__row__scoreline__label'>{match_awayteam_name}</span>
 						<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
 					</div>
 				</div>

@@ -32,7 +32,7 @@
 			}
 
 			&:hover {
-				& > .fixture-table__row__scoreline {
+				.fixture-table__row__scoreline__label {
 					color: lighten($black, 30%);
 					text-decoration: underline;
 				}

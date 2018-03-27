@@ -4,7 +4,6 @@
 	padding: 10px 0;
 
   &__title {
-    // border-bottom: 1px solid $dark-grey;
     font-weight: bold;
     margin: 0 0 10px;
   }
@@ -13,28 +12,34 @@
     align-self: center;
     display: flex;
     flex-direction: column;
-    width: 45%;
+    width: 65%;
 
     &__row {
       display: flex;
       flex-direction: column;
       margin: 0 0 10px;
     }
+
     &__date {
       border-bottom: 1px solid $light-grey;
       display: block;
       font-weight: 600;
+      margin: 0 0 4px;
     }
+
     &__data {
       display: flex;
       justify-content: space-between;
+      padding: 0 0 10px;
     }
+    
     &__match-info {
       display: flex;
       width: 25%;
 
       &:nth-of-type(1) {
         justify-content: flex-start;
+        text-align: left;
       }
       &:nth-of-type(2) {
         font-weight: bold;
@@ -43,11 +48,18 @@
       }
       &:nth-of-type(3) {
         justify-content: flex-end;
+        text-align: right;
       }
     }
   }
 
   &.--active {
     display: flex;
+  }
+
+  @include respond-to(sm-max) {
+    &__first-v-second {
+      width: 80%;
+    }
   }
 }
