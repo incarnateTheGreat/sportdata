@@ -47,48 +47,48 @@ const statistic = (e, i) => {
 	)
 };
 
-const refineDoubleBooking = (cardsGoalScorers) => {
-	const bookings = cardsGoalScorers.filter(record => record['card'] !== undefined),
-				redCardPlayer = bookings.find(player => player['card'] === 'redcard');
+export default class FixtureData extends Component {
+	refineDoubleBooking(cardsGoalScorers) {
+		const bookings = cardsGoalScorers.filter(record => record['card'] !== undefined),
+					redCardPlayer = bookings.find(player => player['card'] === 'redcard');
 
-	if (redCardPlayer) {
-		// Get Player Name and use it to find duplicates in the loop below.
-		const redCardPlayerName = redCardPlayer['home_fault'] || redCardPlayer['away_fault'];
+		if (redCardPlayer) {
+			// Get Player Name and use it to find duplicates in the loop below.
+			const redCardPlayerName = redCardPlayer['home_fault'] || redCardPlayer['away_fault'];
 
-		// TODO: Keep this for now. Might need it later?
-		// Looks for multiple instances of Yellow Cards for the Red-Carded Player.
-		// const b = _.filter(bookings, (o) => {
-		// 	if ((o['away_fault'] === redCardPlayerName || o['home_fault'] === redCardPlayerName) &&
-		// 			o['card'] === 'yellowcard') {
-		// 		return o
-		// 	}
-		// }).length;
+			// TODO: Keep this for now. Might need it later?
+			// Looks for multiple instances of Yellow Cards for the Red-Carded Player.
+			// const b = _.filter(bookings, (o) => {
+			// 	if ((o['away_fault'] === redCardPlayerName || o['home_fault'] === redCardPlayerName) &&
+			// 			o['card'] === 'yellowcard') {
+			// 		return o
+			// 	}
+			// }).length;
 
-		// If the Red-Carded Player had accumlated 2 Yellow Cards, then find the 2nd
-		// Yellow Card and the Red Card and swap them out for the hybrod Yellow/Red.
-		const yellowIndex = _.findLastIndex(cardsGoalScorers, (player) => {
-			return ((player['home_fault'] === redCardPlayerName || player['away_fault'] === redCardPlayerName)
-							&& player['card'] === 'yellowcard')
-		});
+			// If the Red-Carded Player had accumlated 2 Yellow Cards, then find the 2nd
+			// Yellow Card and the Red Card and swap them out for the hybrod Yellow/Red.
+			const yellowIndex = _.findLastIndex(cardsGoalScorers, (player) => {
+				return ((player['home_fault'] === redCardPlayerName || player['away_fault'] === redCardPlayerName)
+								&& player['card'] === 'yellowcard')
+			});
 
-		const redIndex = _.findLastIndex(cardsGoalScorers, (player) => {
-			return ((player['home_fault'] === redCardPlayerName || player['away_fault'] === redCardPlayerName)
-							&& player['card'] === 'redcard')
-		});
+			const redIndex = _.findLastIndex(cardsGoalScorers, (player) => {
+				return ((player['home_fault'] === redCardPlayerName || player['away_fault'] === redCardPlayerName)
+								&& player['card'] === 'redcard')
+			});
 
-		// If yellowIndex returns undefined, then ignore it. Otherwise,
-		// replace the second Yellow Card with 'yellow-red' and
-		// remove the related Red Card.
-		if (yellowIndex !== -1) {
-			cardsGoalScorers[yellowIndex]['card'] = 'yellow-red';
-			cardsGoalScorers.splice(redIndex, 1);
+			// If yellowIndex returns undefined, then ignore it. Otherwise,
+			// replace the second Yellow Card with 'yellow-red' and
+			// remove the related Red Card.
+			if (yellowIndex !== -1) {
+				cardsGoalScorers[yellowIndex]['card'] = 'yellow-red';
+				cardsGoalScorers.splice(redIndex, 1);
+			}
 		}
 	}
-}
 
-export default class FixtureData extends Component {
-	render() {
-		const { id, fixture } = this.props;
+	refineGameData() {
+		const { fixture } = this.props;
 		let cardsGoalScorers = [];
 
 		// Combine both Cards and Goal Scorers into one Array.
@@ -107,9 +107,18 @@ export default class FixtureData extends Component {
 		// Replace the single-quote tick back into the Time attribute.
 		cardsGoalScorers.forEach(el => el.time = `${el.time}'`);
 
+		return cardsGoalScorers;
+	}
+
+	render() {
+		const { id, fixture } = this.props;
+
+		// Refine the Game Data.
+		const cardsGoalScorers = this.refineGameData();
+
 		// If a player has a Second Yellow Card, remove it and the following Red Card
-		// and reolace it with a Yellow-Red Card.
-		refineDoubleBooking(cardsGoalScorers);
+		// and replace it with a Yellow-Red Card.
+		this.refineDoubleBooking(cardsGoalScorers);
 
 		return (
 			<div id={id} className='fixture-data'>
