@@ -41,6 +41,7 @@ export default class Fixture extends Component {
 
 		if (nodeElem.classList.contains('--active')) {
 			nodeElem.classList.remove('--active');
+			nodeH2HElem.classList.remove('--active');
 		} else {
 			// Close all Fixture & H2H Data Drawers. This also allows for toggling.
 			allDataElems.forEach(elem => elem.classList.remove('--active'));
@@ -75,7 +76,6 @@ export default class Fixture extends Component {
 
 		this.setState({ isLoading: true }, () => {
 			this.getData(url).then(data => {
-				// this.setState(prevState => prevState);
 				this.setState({
 					isLoading: false,
 					h2h_data: data.data
