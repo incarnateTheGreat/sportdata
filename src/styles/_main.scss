@@ -23,6 +23,7 @@ main {
 // Section
 section {
 	padding: 10px 0;
+	width: 900px;
 
 	@include respond-to(sm-max) {
 		padding: 10px;
