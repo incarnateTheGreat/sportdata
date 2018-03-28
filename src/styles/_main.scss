@@ -4,6 +4,16 @@
 	position: relative;
 }
 
+.App {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+
+	&__wrapper {
+		flex: 1;
+	}
+}
+
 // Main
 main {
 	display: flex;
@@ -12,7 +22,11 @@ main {
 
 // Section
 section {
-	padding: 10px;
+	padding: 10px 0;
+
+	@include respond-to(sm-max) {
+		padding: 10px;
+	}
 }
 
 // Table

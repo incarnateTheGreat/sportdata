@@ -1,0 +1,39 @@
+footer {
+  background-color: #222;
+  color: white;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+	padding: 10px 15px;
+
+  .footer__wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 700px;
+
+    nav {
+      width: 50%;
+
+      ul {
+        display: flex;
+        list-style: none;
+
+        li {
+          color: $dark-grey;
+          margin: 0 10px 0 0;
+
+          &:hover, &.active {
+            color: $light-grey;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  @include respond-to(sm-max) {
+    .footer__wrapper {
+      width: 100%;
+    }
+  }
+}

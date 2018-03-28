@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ScaleLoader } from 'react-spinners';
 import { withRouter } from 'react-router';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import Main from './Main';
 import './styles/styles.scss';
 
@@ -36,6 +37,7 @@ class App extends Component {
 					</div>
 					<Main />
 				</div>
+				<Footer />
 			</div>
 		);
 	}

@@ -1,6 +1,8 @@
 $positions: 24;
 
 .standings {
+  width: 700px;
+
   &__wrapper {
     align-items: center;
     display: flex;
@@ -91,17 +93,23 @@ $positions: 24;
       }
     }
   }
+}
 
-  @include respond-to(xs-max) {
-    .standings__legend {
-      width: 100%;
-    }
+@include respond-to(sm-max) {
+  .standings {
+    width: 100%;
+  }
+}
 
-    .standings__table {
-      tr {
-        th {
-          width: 8%;
-        }
+@include respond-to(xs-max) {
+  .standings__legend {
+    width: 100%;
+  }
+
+  .standings__table {
+    tr {
+      th {
+        width: 8%;
       }
     }
   }

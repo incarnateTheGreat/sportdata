@@ -1,12 +1,13 @@
 // Defaults
+@import './_respond-to';
 @import './_variables';
 @import './_defaults';
 @import './_icons';
 @import './_main';
-@import './_respond-to';
 
 // Components
 @import './components/header';
+@import './components/footer';
 @import './components/fixtures';
 @import './components/fixture-data';
 @import './components/h2h-data';
