@@ -101,5 +101,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "redux": "^3.7.2"
   }
 }

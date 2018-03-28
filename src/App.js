@@ -5,6 +5,12 @@ import Header from './components/Header';
 import Main from './Main';
 import './styles/styles.scss';
 
+// Redux
+import store from "./store/index";
+import { isLoading } from "./actions/index";
+
+// store.subscribe(() => console.log('Look ma, Redux!!'))
+
 class App extends Component {
 	constructor() {
 		super();
@@ -12,33 +18,43 @@ class App extends Component {
 		this.state = {
 			loading: true
 		};
+
+		store.dispatch(isLoading(true));
 	}
 
 	componentDidMount() {
-		this.executeSpinner();
+		// this.executeSpinner();
+		console.log('did mount.');
+		store.dispatch(isLoading(false));
+		// console.log(store.getState());
+		// TODO: Find a way to re-render render() after Store updates.
 	}
 
 	componentDidUpdate(prevProps) {
-		if (this.props.location.pathname !== prevProps.location.pathname) {
-			this.setState({ loading: true }, () => {
-				this.executeSpinner();
-			});
-		}
+		// if (this.props.location.pathname !== prevProps.location.pathname) {
+		// 	this.setState({ loading: true }, () => {
+		// 		this.executeSpinner();
+		// 	});
+		// }
 	}
 
-	executeSpinner() {
-		setTimeout(() => {
-			this.setState({ loading: false })
-		}, 500)
-	}
+	// executeSpinner() {
+	// 	setTimeout(() => {
+	// 		this.setState({ loading: false })
+	// 	}, 500)
+	// }
 
 	render() {
+		// const isLoading = store.getState().isLoading;
+
+		console.log(store.getState());
+
 		return (
 			<div className='App'>
-				<div className={'loading-spinner ' + (this.state.loading ? null : '--hide-loader')}>
+				<div className={'loading-spinner ' + (store.getState().isLoading ? null : '--hide-loader')}>
 					<ScaleLoader
 						color={'#123abc'}
-						loading={this.state.loading}
+						loading={store.getState().isLoading}
 					/>
 				</div>
 				<Header />

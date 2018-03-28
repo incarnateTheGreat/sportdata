@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import * as constants from '../constants';
+import * as constants from '../constants/constants';
 
 class Standings extends Component {
 	constructor(props) {

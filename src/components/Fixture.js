@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FixtureData from './FixtureData';
 import H2HData from './H2HData';
-import * as constants from '../constants';
+import * as constants from '../constants/constants';
 import classNames from 'classnames';
 import axios from 'axios';
 import moment from 'moment';

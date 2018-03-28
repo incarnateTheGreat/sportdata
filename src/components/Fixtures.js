@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Fixture from './Fixture';
 import axios from 'axios';
 import moment from 'moment';
-import * as constants from '../constants';
+import * as constants from '../constants/constants';
 
 export default class Fixtures extends Component {
 	constructor(props) {
