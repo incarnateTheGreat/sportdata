@@ -6,7 +6,11 @@ import { connect } from 'react-redux';
 
 class Header extends Component {
 	constructor(props) {
-		super()
+		super();
+
+		this.state = {
+			isRendered: false
+		};
 
 		this.navigateTo = this.navigateTo.bind(this);
 	}
@@ -19,20 +23,20 @@ class Header extends Component {
 		return this.props.location.pathname === path ? 'active' : '';
 	}
 
+	componentDidMount() {
+		this.setState({ isRendered: true});
+	}
+
   render() {
 		return (
 			<header>
-				{!this.props.isLoading && (
-					<div>
-						<h1>Sport Data</h1>
-						<nav>
-							<ul>
-								<li className={this.activeClass('/')} onClick={() => this.navigateTo('/')}>Fixtures</li>
-								<li className={this.activeClass('/standings')} onClick={() => this.navigateTo('/standings')}>Standings</li>
-							</ul>
-						</nav>
-					</div>
-				)}
+				<h1>Sport Data</h1>
+				<nav>
+					<ul>
+						<li className={this.activeClass('/')} onClick={() => this.navigateTo('/')}>Fixtures</li>
+						<li className={this.activeClass('/standings')} onClick={() => this.navigateTo('/standings')}>Standings</li>
+					</ul>
+				</nav>
 			</header>
 		)
   }

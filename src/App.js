@@ -26,13 +26,16 @@ class App extends Component {
 	render() {
 		return (
 			<div className='App'>
-				<div className={'loading-spinner ' + (this.props.isLoading ? null : '--hide-loader')}>
-					<ScaleLoader
-						color={'#123abc'}
-					/>
-				</div>
 				<Header />
-				<Main />
+				<div className='App__wrapper'>
+					<div className={'loading-spinner ' + (this.props.isLoading ? null : '--hide-loader')}>
+						<ScaleLoader
+							color={'#123abc'}
+							loading={this.props.isLoading}
+						/>
+					</div>
+					<Main />
+				</div>
 			</div>
 		);
 	}

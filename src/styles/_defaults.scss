@@ -17,7 +17,9 @@
 // Enable font smoothing and legibility options for all content.
 html {
 	font-family: sans-serif;
+	height: 100%;
 	text-rendering: optimizeLegibility;
+	position: relative;
 	-moz-osx-font-smoothing: grayscale;
 	-ms-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%;
@@ -45,6 +47,8 @@ body {
 	margin: 0;
   padding: 0;
   width: 100%;
+
+	position: relative;
 }
 
 h1, h2, h3, h4 {
