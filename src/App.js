@@ -6,6 +6,7 @@ import Main from './Main';
 import './styles/styles.scss';
 
 // Redux
+import { connect } from 'react-redux';
 import store from "./store/index";
 import { isLoading } from "./actions/index";
 
@@ -23,38 +24,34 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		// this.executeSpinner();
-		console.log('did mount.');
-		store.dispatch(isLoading(false));
-		// console.log(store.getState());
-		// TODO: Find a way to re-render render() after Store updates.
+		// store.dispatch(isLoading(false));
+		// this.closeSpinner();
 	}
 
 	componentDidUpdate(prevProps) {
-		// if (this.props.location.pathname !== prevProps.location.pathname) {
-		// 	this.setState({ loading: true }, () => {
-		// 		this.executeSpinner();
-		// 	});
-		// }
+		if (this.props.location.pathname !== prevProps.location.pathname) {
+			// console.log('Path change.');
+			store.dispatch(isLoading(true));
+
+			this.closeSpinner();
+		}
 	}
 
-	// executeSpinner() {
-	// 	setTimeout(() => {
-	// 		this.setState({ loading: false })
-	// 	}, 500)
-	// }
+	closeSpinner() {
+		console.log('Close Spinner.');
+
+		setTimeout(() => {
+			store.dispatch(isLoading(false));
+		}, 1000)
+	}
 
 	render() {
-		// const isLoading = store.getState().isLoading;
-
-		console.log(store.getState());
-
 		return (
 			<div className='App'>
-				<div className={'loading-spinner ' + (store.getState().isLoading ? null : '--hide-loader')}>
+				<div className={'loading-spinner ' + (this.props.isLoading ? null : '--hide-loader')}>
 					<ScaleLoader
 						color={'#123abc'}
-						loading={store.getState().isLoading}
+						loading={this.props.isLoading}
 					/>
 				</div>
 				<Header />
@@ -64,4 +61,7 @@ class App extends Component {
 	}
 }
 
-export default withRouter(App);
+const mapStateToProps = (state) => ({ isLoading: state.isLoading });
+
+// export default withRouter(App);
+export default withRouter(connect(mapStateToProps)(App));

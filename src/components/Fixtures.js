@@ -4,7 +4,12 @@ import axios from 'axios';
 import moment from 'moment';
 import * as constants from '../constants/constants';
 
-export default class Fixtures extends Component {
+// Redux
+import { connect } from 'react-redux';
+import store from "../store/index";
+import { isLoading } from "../actions/index";
+
+class Fixtures extends Component {
 	constructor(props) {
 		super();
 
@@ -15,7 +20,7 @@ export default class Fixtures extends Component {
 	}
 
 	getNextFiveDays() {
-		const from = moment().subtract(10, 'day').format('YYYY-MM-DD'),
+		const from = moment().subtract(20, 'day').format('YYYY-MM-DD'),
 					to = moment().add(10, 'day').format('YYYY-MM-DD');
 
 		return { from, to }
@@ -42,7 +47,10 @@ export default class Fixtures extends Component {
 			fixtures.reverse();
 
 			// Apply into the State.
-			this.setState({ fixtures });
+			this.setState({ fixtures }, () => {
+				console.log('Fixtures loaded. Call Redux...');
+				store.dispatch(isLoading(false));
+			});
 		});
 	}
 
@@ -69,3 +77,7 @@ export default class Fixtures extends Component {
 		)
   }
 }
+
+const mapStateToProps = (state) => ({ isLoading: state.isLoading });
+
+export default connect(mapStateToProps)(Fixtures);

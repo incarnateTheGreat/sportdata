@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import * as constants from '../constants/constants';
 
+// Redux
+import { connect } from 'react-redux';
+import store from "../store/index";
+import { isLoading } from "../actions/index";
+
 class Standings extends Component {
 	constructor(props) {
 		super();
@@ -30,7 +35,10 @@ class Standings extends Component {
 			// Sort Standings by Overall Standings ASC (default).
 			standings.sort((a,b) => a.overall_league_position - b.overall_league_position)
 
-			this.setState({ standings })
+			this.setState({ standings }, () => {
+				console.log('Standings loaded. Call Redux...');
+				store.dispatch(isLoading(false));
+			})
 		});
 	}
 
@@ -68,7 +76,7 @@ class Standings extends Component {
 			}
 
 			// Find the arrow selector that resides under the clicked table header and assign it.
-			let arrow = document.getElementById(columnID).querySelector('.standings__arrow');
+			const arrow = document.getElementById(columnID).querySelector('.standings__arrow');
 			arrow.innerHTML = (sortDirectin === 'ASC' ? '&#x25B2;' : '&#x25BC;');
 
 			this.setState({ standings, sortDirectin });
@@ -157,4 +165,6 @@ class Standings extends Component {
 	}
 }
 
-export default Standings;
+const mapStateToProps = (state) => ({ isLoading: state.isLoading });
+
+export default connect(mapStateToProps)(Standings);
