@@ -18,6 +18,7 @@ class Standings extends Component {
 
 		this.sortTable = this.sortTable.bind(this);
 	}
+
 	async getData(url) {
 		return await axios(url);
 	}
@@ -36,7 +37,6 @@ class Standings extends Component {
 			standings.sort((a,b) => a.overall_league_position - b.overall_league_position)
 
 			this.setState({ standings }, () => {
-				console.log('Standings loaded. Call Redux...');
 				store.dispatch(isLoading(false));
 			})
 		});

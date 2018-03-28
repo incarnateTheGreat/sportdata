@@ -48,7 +48,6 @@ class Fixtures extends Component {
 
 			// Apply into the State.
 			this.setState({ fixtures }, () => {
-				console.log('Fixtures loaded. Call Redux...');
 				store.dispatch(isLoading(false));
 			});
 		});

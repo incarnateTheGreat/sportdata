@@ -8,7 +8,6 @@ const initialState = {
 };
 
 const rootReducer = (state = initialState, action) => {
-  // console.log('action:', action);
   switch (action.type) {
     case TOGGLE_LOADING_SPINNER_ON:
       return { ...state, isLoading: action.payload };
