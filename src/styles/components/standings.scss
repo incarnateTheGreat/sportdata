@@ -22,8 +22,13 @@ $positions: 24;
       th {
         cursor: pointer;
 
-        &:hover {
-          text-decoration: underline;
+        .standings__label {
+          padding: 0 4px 0 0;
+          pointer-events: none;
+        }
+
+        .standings__arrow {
+          pointer-events: none;
         }
       }
     }
