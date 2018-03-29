@@ -10,8 +10,11 @@
 
   &__first-v-second {
     align-self: center;
+    background-color: #e4e4e4;
     display: flex;
     flex-direction: column;
+    margin: 0 0 10px;
+    padding: 10px;
     width: 65%;
 
     &__row {
@@ -32,7 +35,7 @@
       justify-content: space-between;
       padding: 0 0 10px;
     }
-    
+
     &__match-info {
       display: flex;
       width: 25%;
@@ -41,16 +44,33 @@
         justify-content: flex-start;
         text-align: left;
       }
+
       &:nth-of-type(2) {
         font-weight: bold;
         justify-content: center;
         width: 50%;
       }
+
       &:nth-of-type(3) {
         justify-content: flex-end;
         text-align: right;
       }
+
+      &.--winner {
+        font-weight: 600;
+      }
     }
+  }
+
+  &__first_lastResults,
+  &__second_lastResults {
+    align-self: center;
+    background-color: #e4e4e4;
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 10px;
+    padding: 10px;
+    width: 65%;
   }
 
   &.--active {
@@ -58,8 +78,17 @@
   }
 
   @include respond-to(sm-max) {
-    &__first-v-second {
-      width: 80%;
+    &__first-v-second,
+    &__first_lastResults,
+    &__second_lastResults {
+      min-width: 50%;
+    }
+  }
+  @include respond-to(xs-max) {
+    &__first-v-second,
+    &__first_lastResults,
+    &__second_lastResults {
+      min-width: 90%;
     }
   }
 }

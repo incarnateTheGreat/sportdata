@@ -32,6 +32,7 @@ export default class Fixture extends Component {
 	}
 
 	renderMatchData(e) {
+		console.log('hit');
 		const node = e.target,
 					nodeElem = document.getElementById(`${node.id}-data`),
 					nodeH2HElem = document.getElementById(`${node.id}-H2H-data`),
@@ -113,19 +114,21 @@ export default class Fixture extends Component {
 						match_awayteam_score } = this.props.fixture;
 
 		return (
-			<div id={`match-${this.props.fixture.match_id}`} className={this.setMatchRowClass()} onClick={(e) => this.renderMatchData(e)}>
-				<div className='fixture-table__row__scoreline'>
-					<div className='fixture-table__row__element'>
-						<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
-						<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
-					</div>
-					<div className='fixture-table__row__element --score'>
-						{match_hometeam_score} - {match_awayteam_score}
-						<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
-					</div>
-					<div className='fixture-table__row__element'>
-						<span className='fixture-table__row__scoreline__label'>{match_awayteam_name}</span>
-						<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
+			<div>
+				<div id={`match-${this.props.fixture.match_id}`} className={this.setMatchRowClass()} onClick={(e) => this.renderMatchData(e)}>
+					<div className='fixture-table__row__scoreline'>
+						<div className='fixture-table__row__element'>
+							<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
+							<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
+						</div>
+						<div className='fixture-table__row__element --score'>
+							{match_hometeam_score} - {match_awayteam_score}
+							<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
+						</div>
+						<div className='fixture-table__row__element'>
+							<span className='fixture-table__row__scoreline__label'>{match_awayteam_name}</span>
+							<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
+						</div>
 					</div>
 				</div>
 				<FixtureData
@@ -134,6 +137,8 @@ export default class Fixture extends Component {
 				<H2HData
 					id={`match-${this.props.fixture.match_id}-H2H-data`}
 					isLoading={this.state.isLoading}
+					firstTeam={match_hometeam_name}
+					secondTeam={match_awayteam_name}
 					data={this.state.h2h_data} />
 			</div>
 		);
