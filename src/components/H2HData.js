@@ -4,15 +4,24 @@ import classNames from 'classnames';
 import { ScaleLoader } from 'react-spinners';
 
 const h2h = (e, i) => {
+	const homeWinner = classNames(
+		'h2h-data__first-v-second__match-info',
+		e['match_hometeam_score'] > e['match_awayteam_score'] ? '--winner' : ''
+	),
+	awayWinner = classNames(
+		'h2h-data__first-v-second__match-info',
+		e['match_awayteam_score'] > e['match_hometeam_score'] ? '--winner' : ''
+	);
+
 	return (
 		<div className='h2h-data__first_lastResults__row' key={i}>
 			<span className='h2h-data__first-v-second__date'>{moment(e['match_date']).format('MMM D, YYYY')}</span>
 			<div className='h2h-data__first-v-second__data'>
-				<span className='h2h-data__first-v-second__match-info'>{e['match_hometeam_name']}</span>
+				<span className={homeWinner}>{e['match_hometeam_name']}</span>
 				<span className='h2h-data__first-v-second__match-info --score'>
 					{e['match_hometeam_score']} - {e['match_awayteam_score']}
 				</span>
-				<span className='h2h-data__first-v-second__match-info'>{e['match_awayteam_name']}</span>
+				<span className={awayWinner}>{e['match_awayteam_name']}</span>
 			</div>
 		</div>
 	)
@@ -49,6 +58,7 @@ export default class H2HData extends Component {
 						firstTeam,
 						secondTeam,
 						data } = this.props,
+						numberOfPreviousMeetings = 3,
 						numberOfResults = 5;
 
 		return (
@@ -61,8 +71,8 @@ export default class H2HData extends Component {
 				</div>
 				{data && data.firstTeam_VS_secondTeam.length > 0 && (
 					<div className='h2h-data__first-v-second'>
-						<h3 className='h2h-data__title'>Last 3 Meetings</h3>
-						{data.firstTeam_VS_secondTeam.map((e, i) =>
+						<h3 className='h2h-data__title'>Last {numberOfPreviousMeetings} Meetings</h3>
+						{data.firstTeam_VS_secondTeam.slice(0, numberOfPreviousMeetings).map((e, i) =>
 							h2h(e, i)
 						)}
 					</div>
