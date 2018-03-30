@@ -20,8 +20,8 @@ class Fixtures extends Component {
 	}
 
 	getNextFiveDays() {
-		const from = moment().subtract(20, 'day').format('YYYY-MM-DD'),
-					to = moment().add(10, 'day').format('YYYY-MM-DD');
+		const from = moment().subtract(1, 'day').format('YYYY-MM-DD'),
+					to = moment().add(0, 'day').format('YYYY-MM-DD');
 
 		return { from, to }
 	}

@@ -17,22 +17,29 @@ export default class Fixture extends Component {
 		};
 	}
 	handleMatchTime() {
+		const { fixture } = this.props;
+
 		// Return the Match Status if it's either Live or not a Timestamp.
-		if ((this.props.fixture.match_status === 'FT' || this.props.fixture.match_status === 'Postp.')
-			&& this.props.fixture.match_live === '1') {
-			return this.props.fixture.match_status;
+		if ((fixture.match_status === 'FT' || fixture.match_status === 'Postp.')
+			&& fixture.match_live === '1') {
+			return fixture.match_status;
 		}
 
-		const m = moment.utc(this.props.fixture.match_time, 'HH:mm'),
+		// Get Current Match Status Time
+		if (fixture.match_live === '1' && fixture.match_status !== '') {
+			console.log(fixture);
+			return fixture.match_status;
+		}
+
+		const m = moment.utc(fixture.match_time, 'HH:mm'),
 					tz = moment.tz.guess(),
 					modifiedTimeStr = m.clone().tz(tz);
 
 		// Check if the Moment Date is valid. If not, return the original Match Time.
-		return modifiedTimeStr.isValid() ? modifiedTimeStr.format('HH:mm') : this.props.fixture.match_time;
+		return modifiedTimeStr.isValid() ? modifiedTimeStr.format('HH:mm') : fixture.match_time;
 	}
 
 	renderMatchData(e) {
-		console.log('hit');
 		const node = e.target,
 					nodeElem = document.getElementById(`${node.id}-data`),
 					nodeH2HElem = document.getElementById(`${node.id}-H2H-data`),
