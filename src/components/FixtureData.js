@@ -77,13 +77,15 @@ export default class FixtureData extends Component {
 								&& player['card'] === 'redcard')
 			});
 
+			console.log(redCardPlayer, cardsGoalScorers, yellowIndex);
+
 			// If yellowIndex returns undefined, then ignore it. Otherwise,
 			// replace the second Yellow Card with 'yellow-red' and
 			// remove the related Red Card.
-			if (yellowIndex !== -1) {
-				cardsGoalScorers[yellowIndex]['card'] = 'yellow-red';
-				cardsGoalScorers.splice(redIndex, 1);
-			}
+			// if (yellowIndex !== -1) {
+			// 	cardsGoalScorers[yellowIndex]['card'] = 'yellow-red';
+			// 	cardsGoalScorers.splice(redIndex, 1);
+			// }
 		}
 	}
 

@@ -27,7 +27,6 @@ export default class Fixture extends Component {
 
 		// Get Current Match Status Time
 		if (fixture.match_live === '1' && fixture.match_status !== '') {
-			console.log(fixture);
 			return fixture.match_status;
 		}
 
@@ -46,6 +45,8 @@ export default class Fixture extends Component {
 					allDataElems = document.querySelectorAll('.fixture-data'),
 					allH2HElems = document.querySelectorAll('.h2h-data'),
 					fixture = this.props.fixture;
+
+					console.log(fixture);
 
 		if (nodeElem.classList.contains('--active')) {
 			nodeElem.classList.remove('--active');
@@ -71,8 +72,7 @@ export default class Fixture extends Component {
 
 	setMatchRowClass() {
 		const fixture = this.props.fixture,
-					disabled = (fixture.match_status === "Postp."
-											|| (fixture.match_awayteam_score === "?" && fixture.match_hometeam_score === "?"));
+					disabled = (fixture.match_status === "Postp.");
 
 		return classNames(
 			'fixture-table__row',
