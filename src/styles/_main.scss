@@ -26,7 +26,7 @@ section {
 	width: 900px;
 
 	@include respond-to(sm-max) {
-		padding: 10px;
+		padding: 10px 15px;
 	}
 }
 
@@ -74,6 +74,10 @@ table {
 	justify-content: center;
 	position: absolute;
 	width: 100%;
+
+	&.--fixtures {
+		width: inherit;
+	}
 
 	&.--statistics {
 		background-color: transparent;

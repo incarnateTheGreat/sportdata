@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import Fixture from './Fixture';
 import axios from 'axios';
 import moment from 'moment';
+import { ScaleLoader } from 'react-spinners';
 import DatePicker from 'react-datepicker';
 import * as constants from '../constants/constants';
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 // Redux
 import { connect } from 'react-redux';
@@ -19,29 +18,52 @@ class Fixtures extends Component {
 		this.state = {
 			fixtures: [],
 			h2h_list: [],
-			startDate: moment()
+			startDate: moment(),
+			endDate: moment().add(1, 'day'),
+			isLoading: false
 		};
 
-		this.handleDateChange = this.handleDateChange.bind(this);
+		this.handleChangeStart = this.handleChangeStart.bind(this);
+		this.handleChangeEnd = this.handleChangeEnd.bind(this);
 	}
 
-	getNextFiveDays() {
-		const from = moment().subtract(1, 'day').format('YYYY-MM-DD'),
-					to = moment().add(0, 'day').format('YYYY-MM-DD');
+	getDateRange() {
+		const format = 'YYYY-MM-DD',
+					from = this.state.startDate.format(format),
+					to = this.state.endDate.format(format);
 
 		return { from, to }
 	}
 
-	handleDateChange(date) {
-		this.setState({
-			startDate: date
-		});
+	handleChangeStart(startDate) {
+		this.handleChange({ startDate })
+	}
+
+  handleChangeEnd(endDate) {
+		this.handleChange({ endDate })
+	}
+
+	handleChange({startDate, endDate}) {
+		startDate = startDate || this.state.startDate
+		endDate = endDate || this.state.endDate
+
+		if (startDate.isAfter(endDate)) {
+			endDate = startDate
+		}
+
+		this.setState({ startDate, endDate }, () => {
+			this.getFixtures();
+		})
 	}
 
 	getFixtures() {
-		const { from, to } = this.getNextFiveDays(),
-					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=
-					${from}&to=${to}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
+		// Prevent Fixture Loading Spinner from rendering on default load.
+		if (this.state.fixtures.length > 0) {
+			this.setState({ isLoading: true });
+		}
+
+		const { from, to } = this.getDateRange(),
+					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from}&to=${to}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
 		let tempArr = [],
 				fixtures = [];
 
@@ -53,22 +75,21 @@ class Fixtures extends Component {
 					r[a.match_date].push(a);
 					return r;
 				}, []);
-			}
 
-			if (tempArr.length > 0) {
-				// In order to loop through the array, we will push the objects into an array format.
-				for(let x in tempArr) fixtures.push(tempArr[x]);
+				if (Object.keys(tempArr).length > 0) {
+					// In order to loop through the array, we will push the objects into an array format.
+					for(let x in tempArr) fixtures.push(tempArr[x]);
 
-				// Make today's or the most current fixtures listed first.
-				fixtures.reverse();
+					// Make today's or the most current fixtures listed first.
+					fixtures.reverse();
 
-				// Apply into the State.
-				this.setState({ fixtures }, () => {
-					store.dispatch(isLoading(false));
-				});
+					// Apply into the State.
+					this.setState({ fixtures, isLoading: false }, () => {
+						store.dispatch(isLoading(false));
+					});
+				}
 			} else {
-				this.setState({ fixtures }, () => {
-					console.log('no data.');
+				this.setState({ fixtures, isLoading: false }, () => {
 					store.dispatch(isLoading(false));
 				})
 			}
@@ -86,9 +107,37 @@ class Fixtures extends Component {
   render() {
 		return (
 			<section className='fixtures'>
-				<DatePicker
-					selected={this.state.startDate}
-					onChange={this.handleDateChange} />
+				<div className='date-pickers'>
+					<div className='date-pickers__container'>
+						<span className='date-pickers__label'>Start:</span>
+						<DatePicker
+							dateFormat="LL"
+							selected={this.state.startDate}
+							selectsStart
+							startDate={this.state.startDate}
+							endDate={this.state.endDate}
+							onChange={this.handleChangeStart} />
+					</div>
+
+					<div className='date-pickers__container'>
+						<span className='date-pickers__label'>End:</span>
+						<DatePicker
+							dateFormat="LL"
+							selected={this.state.endDate}
+							selectsEnd
+							startDate={this.state.startDate}
+							endDate={this.state.endDate}
+							onChange={this.handleChangeEnd} />
+					</div>
+				</div>
+
+				<div className={'loading-spinner --fixtures ' + (this.state.isLoading ? null : '--hide-loader')}>
+					<ScaleLoader
+						color={'#123abc'}
+						loading={this.state.isLoading}
+					/>
+				</div>
+
 				{this.state.fixtures.length > 0 ? this.state.fixtures.map((fixture, i) =>
 					<div className='fixture-table' key={i}>
 						<div className='fixture-table__row date'>

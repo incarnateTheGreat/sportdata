@@ -3,6 +3,23 @@
 		display: none;
 	}
 
+	.date-pickers {
+		align-items: center;
+		display: flex;
+		margin: 0 0 10px;
+
+		&__container {
+			display: flex;
+			flex-direction: column;
+			padding: 0 10px 0 0;
+		}
+
+		&__label {
+			font-weight: 600;
+			margin: 0 0 4px;
+		}
+	}
+
 	.fixture-table {
 		display: flex;
 		flex-direction: column;
