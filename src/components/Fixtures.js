@@ -9,7 +9,9 @@ import * as constants from '../constants/constants';
 // Redux
 import { connect } from 'react-redux';
 import store from "../store/index";
-import { isLoading } from "../actions/index";
+import { isLoading,
+				 updateStartSearchDate,
+				 updateEndSearchDate } from "../actions/index";
 
 class Fixtures extends Component {
 	constructor(props) {
@@ -28,11 +30,10 @@ class Fixtures extends Component {
 	}
 
 	getDateRange() {
-		const format = 'YYYY-MM-DD',
-					from = this.state.startDate.format(format),
-					to = this.state.endDate.format(format);
+		const from = store.getState(updateStartSearchDate).startDate || this.state.startDate,
+				to = store.getState(updateEndSearchDate).endDate || this.state.endDate;
 
-		return { from, to }
+		return { from, to };
 	}
 
 	handleChangeStart(startDate) {
@@ -52,6 +53,8 @@ class Fixtures extends Component {
 		}
 
 		this.setState({ startDate, endDate }, () => {
+			store.dispatch(updateStartSearchDate(startDate));
+			store.dispatch(updateEndSearchDate(endDate));
 			this.getFixtures();
 		})
 	}
@@ -62,8 +65,9 @@ class Fixtures extends Component {
 			this.setState({ isLoading: true });
 		}
 
-		const { from, to } = this.getDateRange(),
-					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from}&to=${to}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
+		const format = 'YYYY-MM-DD',
+					{ from, to } = this.getDateRange(),
+					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
 		let tempArr = [],
 				fixtures = [];
 
@@ -84,12 +88,12 @@ class Fixtures extends Component {
 					fixtures.reverse();
 
 					// Apply into the State.
-					this.setState({ fixtures, isLoading: false }, () => {
+					this.setState({ fixtures, isLoading: false, startDate: from, endDate: to }, () => {
 						store.dispatch(isLoading(false));
 					});
 				}
 			} else {
-				this.setState({ fixtures, isLoading: false }, () => {
+				this.setState({ fixtures, isLoading: false, startDate: from, endDate: to }, () => {
 					store.dispatch(isLoading(false));
 				})
 			}
@@ -114,6 +118,7 @@ class Fixtures extends Component {
 							dateFormat="LL"
 							selected={this.state.startDate}
 							selectsStart
+							showMonthDropdown
 							startDate={this.state.startDate}
 							endDate={this.state.endDate}
 							onChange={this.handleChangeStart} />
@@ -125,6 +130,7 @@ class Fixtures extends Component {
 							dateFormat="LL"
 							selected={this.state.endDate}
 							selectsEnd
+							showMonthDropdown
 							startDate={this.state.startDate}
 							endDate={this.state.endDate}
 							onChange={this.handleChangeEnd} />
