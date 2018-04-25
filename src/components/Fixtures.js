@@ -4,14 +4,14 @@ import axios from 'axios';
 import moment from 'moment';
 import { ScaleLoader } from 'react-spinners';
 import DatePicker from 'react-datepicker';
-import * as constants from '../constants/constants';
+import { API_FOOTBALL, LEAGUE_IDS } from '../constants/constants';
 
 // Redux
 import { connect } from 'react-redux';
-import store from "../store/index";
+import store from '../store/index';
 import { isLoading,
 				 updateStartSearchDate,
-				 updateEndSearchDate } from "../actions/index";
+				 updateEndSearchDate } from '../actions/index';
 
 class Fixtures extends Component {
 	constructor(props) {
@@ -22,11 +22,13 @@ class Fixtures extends Component {
 			h2h_list: [],
 			startDate: moment(),
 			endDate: moment().add(1, 'day'),
-			isLoading: false
+			isLoading: false,
+			league_id: null
 		};
 
 		this.handleChangeStart = this.handleChangeStart.bind(this);
 		this.handleChangeEnd = this.handleChangeEnd.bind(this);
+		this.getLeague = this.getLeague.bind(this);
 	}
 
 	getDateRange() {
@@ -59,15 +61,30 @@ class Fixtures extends Component {
 		})
 	}
 
+	getLeague(id) {
+		const league_id = id.target.value;
+
+		// Update the State with the most-recently selected League.
+		this.setState({ league_id }, () => {
+			this.getFixtures();
+		});
+	}
+
 	getFixtures() {
 		// Prevent Fixture Loading Spinner from rendering on default load.
 		if (this.state.fixtures.length > 0) {
 			this.setState({ isLoading: true });
 		}
 
+		// Set League ID in State by default if not selected.
+		if (!this.state.league_id) {
+			this.setState({ league_id: Object.keys(LEAGUE_IDS)[0] });
+		}
+
 		const format = 'YYYY-MM-DD',
 					{ from, to } = this.getDateRange(),
-					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=63&APIkey=${constants.API_FOOTBALL}`;
+					league_id = this.state.league_id,
+					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}`;
 		let tempArr = [],
 				fixtures = [];
 
@@ -108,14 +125,31 @@ class Fixtures extends Component {
 		this.getFixtures();
 	}
 
+	leagueDropdown() {
+		const arr = [];
+
+		for (let x in LEAGUE_IDS) {
+			arr.push(<option key={LEAGUE_IDS[x]} value={x}>{LEAGUE_IDS[x]}</option>)
+		}
+
+		return arr;
+	}
+
   render() {
 		return (
 			<section className='fixtures'>
 				<div className='date-pickers'>
 					<div className='date-pickers__container'>
+						<span className='date-pickers__label'>League:</span>
+						<select onChange={this.getLeague}>
+							{this.leagueDropdown()}
+						</select>
+					</div>
+
+					<div className='date-pickers__container'>
 						<span className='date-pickers__label'>Start:</span>
 						<DatePicker
-							dateFormat="LL"
+							dateFormat='LL'
 							selected={this.state.startDate}
 							selectsStart
 							showMonthDropdown
@@ -127,7 +161,7 @@ class Fixtures extends Component {
 					<div className='date-pickers__container'>
 						<span className='date-pickers__label'>End:</span>
 						<DatePicker
-							dateFormat="LL"
+							dateFormat='LL'
 							selected={this.state.endDate}
 							selectsEnd
 							showMonthDropdown
