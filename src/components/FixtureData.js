@@ -47,6 +47,18 @@ const statistic = (e, i) => {
 	)
 };
 
+const NoDataMsg = (fixture) => {
+	if (fixture.match_status === 'FT') {
+		return (
+			<div className='fixture-data__statistics'>
+				<span className='fixture-data__statistics__no-data'>Sorry. There is no statistical data for this match.</span>
+			</div>
+		)
+	} else {
+		return (<div></div>)
+	}
+};
+
 export default class FixtureData extends Component {
 	refineDoubleBooking(cardsGoalScorers) {
 		const bookings = cardsGoalScorers.filter(record => record['card'] !== undefined),
@@ -140,9 +152,7 @@ export default class FixtureData extends Component {
 						)}
 					</div>
 				) : (
-					<div className='fixture-data__statistics'>
-						<span className='fixture-data__statistics__no-data'>Sorry. There is no statistical data for this match.</span>
-					</div>
+					<NoDataMsg {...fixture} />
 				)}
 			</div>
 		);
