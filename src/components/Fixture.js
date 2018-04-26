@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import FixtureData from './FixtureData';
 import H2HData from './H2HData';
 import * as constants from '../constants/constants';
-import classNames from 'classnames';
 import axios from 'axios';
 import moment from 'moment';
 import 'moment-timezone';
@@ -13,6 +12,7 @@ export default class Fixture extends Component {
 
 		this.state = {
 			isLoading: false,
+			isActive: false,
 			h2h_data: null
 		};
 	}
@@ -39,45 +39,48 @@ export default class Fixture extends Component {
 	}
 
 	renderMatchData(e) {
-		const node = e.target,
-					nodeElem = document.getElementById(`${node.id}-data`),
-					nodeH2HElem = document.getElementById(`${node.id}-H2H-data`),
+		const fixture = this.props.fixture,
+					node = e.currentTarget,
 					allDataElems = document.querySelectorAll('.fixture-data'),
 					allH2HElems = document.querySelectorAll('.h2h-data'),
 					fixture = this.props.fixture;
 
 					console.log(fixture);
-
-		if (nodeElem.classList.contains('--active')) {
-			nodeElem.classList.remove('--active');
-			nodeH2HElem.classList.remove('--active');
-		} else {
-			// Close all Fixture & H2H Data Drawers. This also allows for toggling.
-			allDataElems.forEach(elem => elem.classList.remove('--active'));
-			allH2HElems.forEach(elem => elem.classList.remove('--active'));
-
-			// Sets the selected Fixture Data Drawer to Active.
-			nodeElem.classList.add('--active');
-
-			// If a Match is has not been played, render the H2H Data.
-			if (fixture.match_live !== "1") {
-				nodeH2HElem.classList.add('--active');
-
-				// If the Fixture H2H State data has already been collected and stored
-				// in the State, then do not call for it again.
-				if (!this.state.h2h_data) this.getH2HData(fixture);
+		// Close all child elements of Fixture.
+		allDataElems.forEach(elem => {
+			if (elem.id !== id && elem.classList.contains('--active')) {
+				elem.classList.remove('--active')
 			}
-		}
+		});
+
+		allH2HElems.forEach(elem => {
+			if (elem.id !== id && elem.classList.contains('--active')) {
+				elem.classList.remove('--active')
+			}
+		});
+
+		// If the Fixture H2H State data has already been collected and stored
+		// in the State, then do not call for it again.
+
+		// Only render this data if the Match has not gone live yet, and there's
+		// no stored data in the State.
+		if (!this.state.h2h_data && fixture.match_live !== "1") this.getH2HData(fixture);
+
+		// Toggles child elements of Fixture.
+		node.childNodes.forEach(elem => {
+			if (elem.classList.contains('--active')) {
+				elem.classList.remove('--active')
+			} else {
+				elem.classList.add('--active')
+			}
+		});
 	}
 
 	setMatchRowClass() {
 		const fixture = this.props.fixture,
-					disabled = (fixture.match_status === "Postp.");
+					disabled = (fixture.match_status === "Postp." || fixture.match_status === "Canc.");
 
-		return classNames(
-			'fixture-table__row',
-			disabled ? 'fixture-table__row--disabled' : null
-		);
+		return disabled ? 'fixture-table__row--disabled' : null;
 	}
 
 	getH2HData({match_hometeam_name, match_awayteam_name}) {
@@ -91,10 +94,6 @@ export default class Fixture extends Component {
 				}));
 			});
 		});
-	}
-
-	async getData(url) {
-		return await axios(url);
 	}
 
 	displayRedCards(side) {
@@ -114,39 +113,48 @@ export default class Fixture extends Component {
 		return arrayRedCardsElems;
 	}
 
+	async getData(url) {
+		return await axios(url);
+	}
+
 	render() {
 		const { match_hometeam_name,
 						match_hometeam_score,
 						match_awayteam_name,
-						match_awayteam_score } = this.props.fixture;
+						match_awayteam_score,
+						match_live } = this.props.fixture;
 
 		return (
-			<div>
-				<div id={`match-${this.props.fixture.match_id}`} className={this.setMatchRowClass()} onClick={(e) => this.renderMatchData(e)}>
-					<div className='fixture-table__row__scoreline'>
-						<div className='fixture-table__row__element'>
-							<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
-							<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
-						</div>
-						<div className='fixture-table__row__element --score'>
-							{match_hometeam_score} - {match_awayteam_score}
-							<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
-						</div>
-						<div className='fixture-table__row__element'>
-							<span className='fixture-table__row__scoreline__label'>{match_awayteam_name}</span>
-							<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
-						</div>
+			<div className={this.setMatchRowClass()} id={`match-${this.props.fixture.match_id}`} onClick={(e) => this.renderMatchData(e)}>
+			<div className='fixture-table__row'>
+				<div className='fixture-table__row__scoreline'>
+					<div className='fixture-table__row__element'>
+						<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
+						<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
+					</div>
+					<div className='fixture-table__row__element --score'>
+						{match_hometeam_score} - {match_awayteam_score}
+						<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
+					</div>
+					<div className='fixture-table__row__element'>
+						<span className='fixture-table__row__scoreline__label'>{match_awayteam_name}</span>
+						<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
 					</div>
 				</div>
+			</div>
+			{match_live === "1" && (
 				<FixtureData
 					id={`match-${this.props.fixture.match_id}-data`}
-					fixture={this.props.fixture} />
-				<H2HData
-					id={`match-${this.props.fixture.match_id}-H2H-data`}
-					isLoading={this.state.isLoading}
-					firstTeam={match_hometeam_name}
-					secondTeam={match_awayteam_name}
-					data={this.state.h2h_data} />
+					fixture={this.props.fixture}
+					isActive={this.state.isActive} />
+			)}
+			<H2HData
+				id={`match-${this.props.fixture.match_id}-H2H-data`}
+				isLoading={this.state.isLoading}
+				firstTeam={match_hometeam_name}
+				secondTeam={match_awayteam_name}
+				data={this.state.h2h_data}
+				isActive={this.state.isActive} />
 			</div>
 		);
 	}

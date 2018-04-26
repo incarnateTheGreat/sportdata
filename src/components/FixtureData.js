@@ -89,7 +89,7 @@ export default class FixtureData extends Component {
 								&& player['card'] === 'redcard')
 			});
 
-			console.log(redCardPlayer, cardsGoalScorers, yellowIndex);
+			// console.log(redCardPlayer, cardsGoalScorers, yellowIndex);
 
 			// If yellowIndex returns undefined, then ignore it. Otherwise,
 			// replace the second Yellow Card with 'yellow-red' and
@@ -125,7 +125,8 @@ export default class FixtureData extends Component {
 	}
 
 	render() {
-		const { id, fixture } = this.props;
+		const { id,
+						fixture } = this.props;
 
 		// Refine the Game Data.
 		const cardsGoalScorers = this.refineGameData();

@@ -62,7 +62,7 @@ export default class H2HData extends Component {
 						numberOfResults = 5;
 
 		return (
-			<div id={id} className='h2h-data'>
+			<div id={id} className='h2h-data pre-match'>
 				<div className={'loading-spinner --statistics' + (isLoading ? '' : ' --hide-loader')}>
 					<ScaleLoader
 						color={'#123abc'}

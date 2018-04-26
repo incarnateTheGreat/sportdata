@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Fixture from './Fixture';
 import axios from 'axios';
 import moment from 'moment';
-import { ScaleLoader } from 'react-spinners';
 import DatePicker from 'react-datepicker';
 import { API_FOOTBALL, LEAGUE_IDS } from '../constants/constants';
 
@@ -20,10 +19,10 @@ class Fixtures extends Component {
 		this.state = {
 			fixtures: [],
 			h2h_list: [],
-			startDate: moment(),
-			endDate: moment().add(1, 'day'),
+			startDate: moment().subtract(10, 'day'),
+			endDate: moment().add(5, 'day'),
 			isLoading: false,
-			league_id: null
+			league_id: 128
 		};
 
 		this.handleChangeStart = this.handleChangeStart.bind(this);
@@ -85,24 +84,24 @@ class Fixtures extends Component {
 					{ from, to } = this.getDateRange(),
 					league_id = this.state.league_id,
 					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}`;
-		let tempArr = [],
+		let dataArr = [],
 				fixtures = [];
 
 		// Return Fixture Data and group by date.
 		this.getData(url).then(data => {
 			if (data.data.error !== 404) {
-				tempArr = data.data.reduce((r, a) => {
+				dataArr = data.data.reduce((r, a) => {
 					r[a.match_date] = r[a.match_date] || [];
 					r[a.match_date].push(a);
 					return r;
 				}, []);
 
-				if (Object.keys(tempArr).length > 0) {
+				if (Object.keys(dataArr).length > 0) {
 					// In order to loop through the array, we will push the objects into an array format.
-					for(let x in tempArr) fixtures.push(tempArr[x]);
+					for(let x in dataArr) fixtures.push(dataArr[x]);
 
 					// Make today's or the most current fixtures listed first.
-					fixtures.reverse();
+					// fixtures.reverse();
 
 					// Apply into the State.
 					this.setState({ fixtures, isLoading: false, startDate: from, endDate: to }, () => {
@@ -118,6 +117,7 @@ class Fixtures extends Component {
 	}
 
 	async getData(url) {
+		store.dispatch(isLoading(true));
 		return await axios(url);
 	}
 
@@ -126,13 +126,13 @@ class Fixtures extends Component {
 	}
 
 	leagueDropdown() {
-		const arr = [];
+		const leagueSelections = [];
 
 		for (let x in LEAGUE_IDS) {
-			arr.push(<option key={LEAGUE_IDS[x]} value={x}>{LEAGUE_IDS[x]}</option>)
+			leagueSelections.push(<option key={LEAGUE_IDS[x]} value={x}>{LEAGUE_IDS[x]}</option>)
 		}
 
-		return arr;
+		return leagueSelections;
 	}
 
   render() {
@@ -169,13 +169,6 @@ class Fixtures extends Component {
 							endDate={this.state.endDate}
 							onChange={this.handleChangeEnd} />
 					</div>
-				</div>
-
-				<div className={'loading-spinner --fixtures ' + (this.state.isLoading ? null : '--hide-loader')}>
-					<ScaleLoader
-						color={'#123abc'}
-						loading={this.state.isLoading}
-					/>
 				</div>
 
 				{this.state.fixtures.length > 0 ? this.state.fixtures.map((fixture, i) =>
