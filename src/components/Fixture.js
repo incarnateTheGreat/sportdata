@@ -69,11 +69,11 @@ export default class Fixture extends Component {
 		// Toggles clicked element only.
 		function toggleDrawer() {
 			parentNode.childNodes.forEach(elem => {
-				elem.classList.contains('--active') ? elem.classList.remove('--active') : elem.classList.add('--active')
+				elem.classList.toggle('--active')
 			})
 
 			// Remove class from parent.
-			parentNode.classList.contains('--active') ? parentNode.classList.remove('--active') : parentNode.classList.add('--active')
+			parentNode.classList.toggle('--active');
 		}
 
 		// Only render this data if the Match has not gone live yet, and there's no stored data in the State.
