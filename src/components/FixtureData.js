@@ -51,7 +51,7 @@ const NoDataMsg = (fixture) => {
 	if (fixture.match_status === 'FT') {
 		return (
 			<div className='fixture-data__statistics'>
-				<span className='fixture-data__statistics__no-data'>Sorry. There is no statistical data for this match.</span>
+				<span className='fixture-data__no-data'>Sorry. There is no statistical data for this match.</span>
 			</div>
 		)
 	} else {
@@ -137,12 +137,16 @@ export default class FixtureData extends Component {
 
 		return (
 			<div id={id} className='fixture-data --child'>
-				{cardsGoalScorers.length > 0 && (
+				{cardsGoalScorers.length > 0 ? (
 					<div className='fixture-data__events'>
 						<span className='fixture-data__statistics__title'>Match Summary</span>
-						{cardsGoalScorers.map((e, i) =>
+						{ cardsGoalScorers.map((e, i) =>
 							e.hasOwnProperty('home_scorer') ? goalscorer(e, i) : booking(e, i)
 						)}
+					</div>
+				) : (
+					<div className='fixture-data__events'>
+						<span className='fixture-data__no-data'>Sorry. There is no statistical data for this match.</span>
 					</div>
 				)}
 				{fixture.statistics.length > 0 ? (

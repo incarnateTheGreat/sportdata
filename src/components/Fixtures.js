@@ -32,7 +32,7 @@ class Fixtures extends Component {
 
 	getDateRange() {
 		const from = store.getState(updateStartSearchDate).startDate || this.state.startDate,
-				to = store.getState(updateEndSearchDate).endDate || this.state.endDate;
+					to = store.getState(updateEndSearchDate).endDate || this.state.endDate;
 
 		return { from, to };
 	}
@@ -75,14 +75,9 @@ class Fixtures extends Component {
 			this.setState({ isLoading: true });
 		}
 
-		// Set League ID in State by default if not selected.
-		if (!this.state.league_id) {
-			this.setState({ league_id: Object.keys(LEAGUE_IDS)[0] });
-		}
-
 		const format = 'YYYY-MM-DD',
 					{ from, to } = this.getDateRange(),
-					league_id = this.state.league_id,
+					league_id = this.state.league_id || Object.keys(LEAGUE_IDS)[0],
 					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}`;
 		let dataArr = [],
 				fixtures = [];
@@ -122,7 +117,14 @@ class Fixtures extends Component {
 	}
 
 	componentDidMount() {
-		this.getFixtures();
+		// Set League ID in State by default if not selected.
+		if (!this.state.league_id) {
+			this.setState({ league_id: Object.keys(LEAGUE_IDS)[0] }, () => {
+				this.getFixtures();
+			});
+		} else {
+			this.getFixtures();
+		}
 	}
 
 	leagueDropdown() {

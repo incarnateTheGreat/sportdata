@@ -4,3 +4,20 @@ export const LEAGUE_IDS = {
   63: 'England: Championship',
   128: 'France: Ligue 2'
 };
+export let LEAGUE_POSITION_PLACEMENTS = {
+  63: {
+    total: 24,
+    promotion: 3,
+    playoffs: 7,
+    relegation: null
+  },
+  128: {
+    total: 20,
+    promotion: 2,
+    playoffs: 5,
+    relegation: null
+  }
+}
+
+LEAGUE_POSITION_PLACEMENTS['63'].relegation =  LEAGUE_POSITION_PLACEMENTS['63'].total - 3;
+LEAGUE_POSITION_PLACEMENTS['128'].relegation =  LEAGUE_POSITION_PLACEMENTS['128'].total - 3;

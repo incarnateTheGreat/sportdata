@@ -2,7 +2,6 @@ $positions: 24;
 
 .standings {
   &__wrapper {
-    align-items: center;
     display: flex;
     flex-direction: column;
   }
@@ -36,25 +35,31 @@ $positions: 24;
       font-size: $font-size-xmedium;
 
       tr {
-        // The first two elements.
-        @for $i from 1 through $positions {
-          &.--position-#{$i} {
-            @if $i < 3 {
-              background-color: $green;
-              color: $white;
-            } @elseif $i < 7 {
-              background-color: $primary-blue;
-              color: $white;
-            } @elseif ($i == $positions - 3
-                      or $i == $positions - 2
-                      or $i == $positions - 1
-                      or $i == $positions) {
-              background-color: $dark-red;
-              color: $white;
-            }
-          }
+        &.--promotion {
+          background-color: $green;
+          color: $white;
+        }
+        &.--playoffs {
+          background-color: $primary-blue;
+          color: $white;
+        }
+        &.--relegation {
+          background-color: $dark-red;
+          color: $white;
         }
       }
+    }
+  }
+
+  &__picker {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 10px;
+    width: 250px;
+
+    &__label {
+      font-weight: 600;
+      margin: 0 0 4px;
     }
   }
 
@@ -96,6 +101,10 @@ $positions: 24;
 @include respond-to(sm-max) {
   .standings {
     width: 100%;
+
+    &__picker {
+      width: 100%;
+    }
   }
 }
 
