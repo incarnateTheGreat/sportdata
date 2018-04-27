@@ -27,7 +27,8 @@ class Standings extends Component {
 
 	getStandings() {
 		const league_id = this.state.league_id || Object.keys(LEAGUE_IDS)[0],
-					url = `https://apifootball.com/api/?action=get_standings&league_id=${league_id}&APIkey=${API_FOOTBALL}`;
+					cacheTimestamp = new Date().getTime(),
+					url = `https://apifootball.com/api/?action=get_standings&league_id=${league_id}&APIkey=${API_FOOTBALL}&timestamp=${cacheTimestamp}`;
 
 		// Return Standings Data.
 		this.getData(url).then(data => {

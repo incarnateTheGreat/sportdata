@@ -78,7 +78,8 @@ class Fixtures extends Component {
 		const format = 'YYYY-MM-DD',
 					{ from, to } = this.getDateRange(),
 					league_id = this.state.league_id || Object.keys(LEAGUE_IDS)[0],
-					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}`;
+					cacheTimestamp = new Date().getTime(),
+					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}&timestamp=${cacheTimestamp}`;
 		let dataArr = [],
 				fixtures = [];
 
