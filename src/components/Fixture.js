@@ -41,9 +41,6 @@ export default class Fixture extends Component {
 		const fixture = this.props.fixture,
 					node = e.currentTarget,
 					parentNode = e.currentTarget.parentNode,
-					id = `${node.id}-data`,
-					allDataElems = document.querySelectorAll('.fixture-data'),
-					allH2HElems = document.querySelectorAll('.h2h-data'),
 					allParentElems = document.querySelectorAll('.fixture-table__row-container'),
 					childElems = document.querySelectorAll('.--child');
 
