@@ -136,7 +136,7 @@ export default class FixtureData extends Component {
 		this.refineDoubleBooking(cardsGoalScorers);
 
 		return (
-			<div id={id} className='fixture-data'>
+			<div id={id} className='fixture-data --child'>
 				{cardsGoalScorers.length > 0 && (
 					<div className='fixture-data__events'>
 						<span className='fixture-data__statistics__title'>Match Summary</span>

@@ -19,10 +19,10 @@ class Fixtures extends Component {
 		this.state = {
 			fixtures: [],
 			h2h_list: [],
-			startDate: moment().subtract(10, 'day'),
-			endDate: moment().add(5, 'day'),
+			startDate: moment(),
+			endDate: moment().add(1, 'day'),
 			isLoading: false,
-			league_id: 128
+			league_id: null
 		};
 
 		this.handleChangeStart = this.handleChangeStart.bind(this);

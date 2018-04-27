@@ -12,7 +12,6 @@ export default class Fixture extends Component {
 
 		this.state = {
 			isLoading: false,
-			isActive: false,
 			h2h_data: null
 		};
 	}
@@ -41,46 +40,54 @@ export default class Fixture extends Component {
 	renderMatchData(e) {
 		const fixture = this.props.fixture,
 					node = e.currentTarget,
+					parentNode = e.currentTarget.parentNode,
+					id = `${node.id}-data`,
 					allDataElems = document.querySelectorAll('.fixture-data'),
 					allH2HElems = document.querySelectorAll('.h2h-data'),
-					fixture = this.props.fixture;
+					allParentElems = document.querySelectorAll('.fixture-table__row-container'),
+					childElems = document.querySelectorAll('.--child');
 
-					console.log(fixture);
-		// Close all child elements of Fixture.
-		allDataElems.forEach(elem => {
-			if (elem.id !== id && elem.classList.contains('--active')) {
-				elem.classList.remove('--active')
-			}
-		});
+		// If the user clicks on an already-opened drawer, then ignore all the others and just close the clicked drawer.
+		// Otherwise, close all the other drawers.
+		if (parentNode.classList.contains('--active')) {
+			toggleDrawer();
+		} else {
+			node.classList.add('--active')
+			closeAllDrawers();
+			toggleDrawer();
+		}
 
-		allH2HElems.forEach(elem => {
-			if (elem.id !== id && elem.classList.contains('--active')) {
-				elem.classList.remove('--active')
-			}
-		});
+		// Closes all the other drawers.
+		function closeAllDrawers() {
+			childElems.forEach(elem => {
+				if (elem.classList.contains('--active')) {
+					elem.classList.remove('--active');
+				}
+			})
 
-		// If the Fixture H2H State data has already been collected and stored
-		// in the State, then do not call for it again.
+			// Remove class from parent.
+			allParentElems.forEach(elem => elem.classList.remove('--active'));
+		}
 
-		// Only render this data if the Match has not gone live yet, and there's
-		// no stored data in the State.
-		if (!this.state.h2h_data && fixture.match_live !== "1") this.getH2HData(fixture);
+		// Toggles clicked element only.
+		function toggleDrawer() {
+			parentNode.childNodes.forEach(elem => {
+				elem.classList.contains('--active') ? elem.classList.remove('--active') : elem.classList.add('--active')
+			})
 
-		// Toggles child elements of Fixture.
-		node.childNodes.forEach(elem => {
-			if (elem.classList.contains('--active')) {
-				elem.classList.remove('--active')
-			} else {
-				elem.classList.add('--active')
-			}
-		});
+			// Remove class from parent.
+			parentNode.classList.contains('--active') ? parentNode.classList.remove('--active') : parentNode.classList.add('--active')
+		}
+
+		// Only render this data if the Match has not gone live yet, and there's no stored data in the State.
+		if (!this.state.h2h_data && (fixture.match_status === '' || fixture.match_live !== '1')) this.getH2HData(fixture);
 	}
 
 	setMatchRowClass() {
 		const fixture = this.props.fixture,
 					disabled = (fixture.match_status === "Postp." || fixture.match_status === "Canc.");
 
-		return disabled ? 'fixture-table__row--disabled' : null;
+		return disabled ? 'fixture-table__row--disabled' : 'fixture-table__row-container';
 	}
 
 	getH2HData({match_hometeam_name, match_awayteam_name}) {
@@ -122,39 +129,37 @@ export default class Fixture extends Component {
 						match_hometeam_score,
 						match_awayteam_name,
 						match_awayteam_score,
-						match_live } = this.props.fixture;
+						match_status } = this.props.fixture;
 
 		return (
-			<div className={this.setMatchRowClass()} id={`match-${this.props.fixture.match_id}`} onClick={(e) => this.renderMatchData(e)}>
-			<div className='fixture-table__row'>
-				<div className='fixture-table__row__scoreline'>
-					<div className='fixture-table__row__element'>
-						<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
-						<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
-					</div>
-					<div className='fixture-table__row__element --score'>
-						{match_hometeam_score} - {match_awayteam_score}
-						<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
-					</div>
-					<div className='fixture-table__row__element'>
-						<span className='fixture-table__row__scoreline__label'>{match_awayteam_name}</span>
-						<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
+			<div className={this.setMatchRowClass()} id={`match-${this.props.fixture.match_id}`}>
+				<div className='fixture-table__row' onClick={(e) => this.renderMatchData(e)}>
+					<div className='fixture-table__row__scoreline'>
+						<div className='fixture-table__row__element'>
+							<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
+							<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
+						</div>
+						<div className='fixture-table__row__element --score'>
+							{match_hometeam_score} - {match_awayteam_score}
+							<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
+						</div>
+						<div className='fixture-table__row__element'>
+							<span className='fixture-table__row__scoreline__label'>{match_awayteam_name}</span>
+							<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			{match_live === "1" && (
-				<FixtureData
-					id={`match-${this.props.fixture.match_id}-data`}
-					fixture={this.props.fixture}
-					isActive={this.state.isActive} />
-			)}
-			<H2HData
-				id={`match-${this.props.fixture.match_id}-H2H-data`}
-				isLoading={this.state.isLoading}
-				firstTeam={match_hometeam_name}
-				secondTeam={match_awayteam_name}
-				data={this.state.h2h_data}
-				isActive={this.state.isActive} />
+				{match_status !== '' && (
+					<FixtureData
+						id={`match-${this.props.fixture.match_id}-data`}
+						fixture={this.props.fixture} />
+				)}
+				<H2HData
+					id={`match-${this.props.fixture.match_id}-H2H-data`}
+					isLoading={this.state.isLoading}
+					firstTeam={match_hometeam_name}
+					secondTeam={match_awayteam_name}
+					data={this.state.h2h_data} />
 			</div>
 		);
 	}

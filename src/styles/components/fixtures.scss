@@ -25,6 +25,12 @@
 		flex-direction: column;
 		margin: 0 0 20px;
 
+		&__row-container {
+			.--child {
+				pointer-events: none;
+			}
+		}
+
 		&__row {
 			border-bottom: 1px solid $black;
 			cursor: pointer;
@@ -36,10 +42,6 @@
 
 			&:last-child {
 				border: none;
-			}
-
-			& > * {
-				pointer-events: none;
 			}
 
 			&:nth-of-type(odd) {
