@@ -25,6 +25,7 @@ class Fixtures extends Component {
 			league_id: null
 		};
 
+		this.interval = null;
 		this.handleChangeStart = this.handleChangeStart.bind(this);
 		this.handleChangeEnd = this.handleChangeEnd.bind(this);
 		this.getLeague = this.getLeague.bind(this);
@@ -85,6 +86,8 @@ class Fixtures extends Component {
 
 		// Return Fixture Data and group by date.
 		this.getData(url).then(data => {
+			const stateObj = { fixtures, isLoading: false, startDate: from, endDate: to };
+
 			if (data.data.error !== 404) {
 				dataArr = data.data.reduce((r, a) => {
 					r[a.match_date] = r[a.match_date] || [];
@@ -96,16 +99,23 @@ class Fixtures extends Component {
 					// In order to loop through the array, we will push the objects into an array format.
 					for(let x in dataArr) fixtures.push(dataArr[x]);
 
-					// Make today's or the most current fixtures listed first.
-					// fixtures.reverse();
+					// Find and determine if Matches are Live today and if they have not been completed (or have yet to start).
+					for (let x in dataArr) {
+						for (let y = 0; y < dataArr[x].length; y++) {
+							if (dataArr[x][y]['match_live'] === '1' && dataArr[x][y]['match_status'] !== 'FT') {
+								if (!this.interval) this.startInterval();
+								break;
+							}
+						}
+					}
 
 					// Apply into the State.
-					this.setState({ fixtures, isLoading: false, startDate: from, endDate: to }, () => {
+					this.setState(stateObj, () => {
 						store.dispatch(isLoading(false));
 					});
 				}
 			} else {
-				this.setState({ fixtures, isLoading: false, startDate: from, endDate: to }, () => {
+				this.setState(stateObj, () => {
 					store.dispatch(isLoading(false));
 				})
 			}
@@ -128,6 +138,12 @@ class Fixtures extends Component {
 		}
 	}
 
+	startInterval() {
+		this.interval = setInterval(() => {
+			this.getFixtures();
+		}, 60000);
+	}
+
 	leagueDropdown() {
 		const leagueSelections = [];
 
@@ -137,6 +153,10 @@ class Fixtures extends Component {
 
 		return leagueSelections;
 	}
+
+	componentWillUnmount() {
+    clearInterval(this.interval);
+  }
 
   render() {
 		return (
@@ -177,7 +197,7 @@ class Fixtures extends Component {
 				{this.state.fixtures.length > 0 ? this.state.fixtures.map((fixture, i) =>
 					<div className='fixture-table' key={i}>
 						<div className='fixture-table__row date'>
-							<div>{moment(fixture[0].match_date).format('MMMM DD, YYYY')}</div>
+							<div>{moment(fixture[0].match_date).format('MMMM D, YYYY')}</div>
 						</div>
 						{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
 					</div>
