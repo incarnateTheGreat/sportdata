@@ -96,6 +96,10 @@
 				&.--score {
 					flex-direction: column;
 				}
+
+				&.--live {
+					color: $red;
+				}
 			}
 
 			&__red-cards {

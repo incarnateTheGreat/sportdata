@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FixtureData from './FixtureData';
 import H2HData from './H2HData';
 import * as constants from '../constants/constants';
+import classNames from 'classnames';
 import axios from 'axios';
 import moment from 'moment';
 import 'moment-timezone';
@@ -126,7 +127,13 @@ export default class Fixture extends Component {
 						match_hometeam_score,
 						match_awayteam_name,
 						match_awayteam_score,
-						match_status } = this.props.fixture;
+						match_status,
+					  match_live } = this.props.fixture;
+
+		const scoreClasses = classNames(
+			'fixture-table__row__element --score',
+			match_live === '1' && match_status !== 'FT' ? '--live' : ''
+		)
 
 		return (
 			<div className={this.setMatchRowClass()} id={`match-${this.props.fixture.match_id}`}>
@@ -136,7 +143,7 @@ export default class Fixture extends Component {
 							<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
 							<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
 						</div>
-						<div className='fixture-table__row__element --score'>
+						<div className={scoreClasses}>
 							{match_hometeam_score} - {match_awayteam_score}
 							<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
 						</div>
