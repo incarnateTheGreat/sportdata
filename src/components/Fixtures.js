@@ -163,15 +163,17 @@ class Fixtures extends Component {
 			<section className='fixtures'>
 				<div className='date-pickers'>
 					<div className='date-pickers__container'>
-						<span className='date-pickers__label'>League:</span>
-						<select onChange={this.getLeague}>
+						<label className='date-pickers__label' htmlFor="date-pickers__select">League:</label>
+						<select name='date-pickers__select' id='date-pickers__select' onChange={this.getLeague}>
 							{this.leagueDropdown()}
 						</select>
 					</div>
 
 					<div className='date-pickers__container'>
-						<span className='date-pickers__label'>Start:</span>
+						<label className='date-pickers__label' htmlFor='date-pickers__start-label'>Start:</label>
 						<DatePicker
+							name='date-pickers__start-label'
+							id='date-pickers__start-label'
 							dateFormat='LL'
 							selected={this.state.startDate}
 							selectsStart
@@ -182,8 +184,10 @@ class Fixtures extends Component {
 					</div>
 
 					<div className='date-pickers__container'>
-						<span className='date-pickers__label'>End:</span>
+						<label className='date-pickers__label' htmlFor="date-pickers__end-label">End:</label>
 						<DatePicker
+							name='date-pickers__end-label'
+							id='date-pickers__end-label'
 							dateFormat='LL'
 							selected={this.state.endDate}
 							selectsEnd
