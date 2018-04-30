@@ -13,7 +13,7 @@ export let LEAGUE_POSITION_PLACEMENTS = {
   },
   128: {
     total: 20,
-    promotion: 2,
+    promotion: 3,
     playoffs: 5,
     relegation: null
   }

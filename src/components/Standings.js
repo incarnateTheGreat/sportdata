@@ -12,9 +12,10 @@ class Standings extends Component {
 		super();
 
 		this.state = {
+			isLoading: false,
 			league_id: null,
-			standings: null,
-			sortDirectin: 'ASC'
+			standings: [],
+			sortDirection: 'ASC'
 		}
 
 		this.sortTable = this.sortTable.bind(this);
@@ -26,9 +27,18 @@ class Standings extends Component {
 	}
 
 	getStandings() {
+		// Prevent Fixture Loading Spinner from rendering on default load.
+		if (this.state.standings.length > 0) {
+			store.dispatch(isLoading(true));
+		}
+
 		const league_id = this.state.league_id || Object.keys(LEAGUE_IDS)[0],
 					cacheTimestamp = new Date().getTime(),
+					arrows = document.getElementsByClassName('standings__arrow'),
 					url = `https://apifootball.com/api/?action=get_standings&league_id=${league_id}&APIkey=${API_FOOTBALL}&timestamp=${cacheTimestamp}`;
+
+		// Clear all the active Arrows.
+		for (let i = 0; i < arrows.length; i++) arrows[i].innerHTML = '';
 
 		// Return Standings Data.
 		this.getData(url).then(data => {
@@ -42,35 +52,41 @@ class Standings extends Component {
 
 			this.setState({ standings }, () => {
 				store.dispatch(isLoading(false));
-
-				// Get all Table Row elements and assign classes position-based classes to them.
-				const tbody = [...document.getElementsByTagName('tbody')[0].children];
-
-				// Remove all position-based classes during re-render.
-				tbody.forEach(elem => {
-					elem.classList.remove('--promotion', '--playoffs', '--relegation');
-				})
-
-				// Apply the position-based classes.
-				tbody.forEach((elem, i) => {
-					if (i < LEAGUE_POSITION_PLACEMENTS[this.state.league_id].promotion) {
-						elem.classList.add('--promotion')
-					} else if (i < LEAGUE_POSITION_PLACEMENTS[this.state.league_id].playoffs) {
-						elem.classList.add('--playoffs')
-					} else if (i >= LEAGUE_POSITION_PLACEMENTS[this.state.league_id].relegation) {
-						elem.classList.add('--relegation')
-					}
-				})
+				this.assignPositionClasses();
 			})
 		});
 	}
 
+	assignPositionClasses() {
+		// Get all Table Row elements and assign classes position-based classes to them.
+		const tbody = [...document.getElementsByTagName('tbody')[0].children];
+
+		// Remove all position-based classes during re-render.
+		tbody.forEach(elem => {
+			elem.classList.remove('--promotion', '--playoffs', '--relegation');
+		})
+
+		// Apply the position-based classes.
+		tbody.forEach(elem => {
+			const position = elem.classList[0].split('-').pop();
+
+			if (position < LEAGUE_POSITION_PLACEMENTS[this.state.league_id].promotion) {
+				elem.classList.add('--promotion')
+			} else if (position < LEAGUE_POSITION_PLACEMENTS[this.state.league_id].playoffs) {
+				elem.classList.add('--playoffs')
+			} else if (position >= LEAGUE_POSITION_PLACEMENTS[this.state.league_id].relegation) {
+				elem.classList.add('--relegation')
+			}
+		})
+	}
+
 	sortTable(column) {
-		const columnID = column.target.id;
+		const columnID = column.target.id,
+					classList = column.target.classList,
+					arrows = document.getElementsByClassName('standings__arrow');
+
 		let standings = null,
-				sortDirectin = '',
-				classList = column.target.classList,
-				arrows = document.getElementsByClassName('standings__arrow');
+				sortDirection = '';
 
 		if (this.state.standings) {
 			standings = this.state.standings;
@@ -80,29 +96,31 @@ class Standings extends Component {
 
 			// Sort Alphabetically.
 			if (classList.contains('--non-numeric')) {
-				if (this.state.sortDirectin === 'ASC') {
+				if (this.state.sortDirection === 'ASC') {
 					standings.sort((a,b) => a[columnID].localeCompare(b[columnID]));
-					sortDirectin = 'DESC';
+					sortDirection = 'DESC';
 				} else {
 					standings.sort((a,b) => b[columnID].localeCompare(a[columnID]));
-					sortDirectin = 'ASC';
+					sortDirection = 'ASC';
 				}
 			} else {
 				// Sort Numerically.
-				if (this.state.sortDirectin === 'ASC') {
+				if (this.state.sortDirection === 'ASC') {
 					standings.sort((a, b) => b[columnID] - a[columnID]);
-					sortDirectin = 'DESC';
+					sortDirection = 'DESC';
 				} else {
 					standings.sort((a, b) => a[columnID] - b[columnID]);
-					sortDirectin = 'ASC';
+					sortDirection = 'ASC';
 				}
 			}
 
 			// Find the arrow selector that resides under the clicked table header and assign it.
 			const arrow = document.getElementById(columnID).querySelector('.standings__arrow');
-			arrow.innerHTML = (sortDirectin === 'ASC' ? '&#x25B2;' : '&#x25BC;');
+			arrow.innerHTML = (sortDirection === 'ASC' ? '&#x25B2;' : '&#x25BC;');
 
-			this.setState({ standings, sortDirectin });
+			this.setState({ standings, sortDirection }, () => {
+				this.assignPositionClasses();
+			});
 		}
 	}
 
