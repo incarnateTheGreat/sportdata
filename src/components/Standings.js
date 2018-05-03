@@ -157,7 +157,7 @@ class Standings extends Component {
 	render() {
 		return (
 			<section className='standings'>
-				{this.state.standings ? (
+				{this.state.standings.length > 0 ? (
 					<div className='standings__wrapper'>
 						<div className='standings__picker'>
 							<span className='standings__picker__label'>League:</span>
