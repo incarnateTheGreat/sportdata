@@ -13,9 +13,13 @@ export default class Fixture extends Component {
 
 		this.state = {
 			isLoading: false,
-			h2h_data: null
+			h2h_data: null,
+			fixture: [],
+			match_hometeam_score: null,
+			match_awayteam_score: null
 		};
 	}
+
 	handleMatchTime() {
 		const { fixture } = this.props;
 
@@ -122,13 +126,58 @@ export default class Fixture extends Component {
 		return await axios(url);
 	}
 
+	displayNotification(scoreData) {
+		const title = 'Simple Title';
+    const options = {
+      body: 'Simple piece of body text.\nSecond line of body text :)'
+    };
+
+		if (Notification.permission === 'granted') {
+			navigator.serviceWorker.getRegistration().then(reg => {
+				reg.showNotification(title, options);
+			});
+		}
+	}
+
+	updateFixtureData() {
+		const stateScores = { fixture: this.props.fixture,
+													match_hometeam_score: this.props.fixture.match_hometeam_score,
+													match_awayteam_score: this.props.fixture.match_awayteam_score };
+
+		this.setState(stateScores);
+	}
+
+	componentDidMount() {
+		this.updateFixtureData();
+	}
+
+	componentDidUpdate() {
+		this.updateFixtureData();
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		// Populate State on render.
+		if (!this.state.match_hometeam_score) return true;
+
+		// Update State when a goal is scored.
+		if (this.state.match_hometeam_score && (this.state.match_hometeam_score !== nextProps.fixture.match_hometeam_score)) {
+			this.displayNotification({
+				'match_hometeam_name': this.state.fixture.match_hometeam_name
+			});
+
+			return true;
+		}
+
+		return false;
+	}
+
 	render() {
 		const { match_hometeam_name,
 						match_hometeam_score,
 						match_awayteam_name,
 						match_awayteam_score,
 						match_status,
-					  match_live } = this.props.fixture;
+					  match_live } = this.state.fixture;
 
 		const scoreClasses = classNames(
 			'fixture-table__row__element --score',
