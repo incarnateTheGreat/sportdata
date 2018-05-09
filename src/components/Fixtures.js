@@ -166,8 +166,11 @@ class Fixtures extends Component {
   }
 
 	updateStubData() {
-		stubScoreData[0].match_hometeam_score++;
-		stubScoreData[0].match_hometeam_score = stubScoreData[0].match_hometeam_score.toString();
+		// stubScoreData[0].match_hometeam_score++;
+		// stubScoreData[0].match_hometeam_score = stubScoreData[0].match_hometeam_score.toString();
+
+		stubScoreData[0].match_awayteam_score++;
+		stubScoreData[0].match_awayteam_score = stubScoreData[0].match_awayteam_score.toString();
 
 		this.getFixtures();
 	}

@@ -127,12 +127,20 @@ export default class Fixture extends Component {
 	}
 
 	displayNotification(scoreData) {
-		const title = 'Simple Title';
-    const options = {
-      body: 'Simple piece of body text.\nSecond line of body text :)'
-    };
-
 		if (Notification.permission === 'granted') {
+			const { goalscoringTeam,
+							match_hometeam_name,
+							match_hometeam_score,
+							match_awayteam_name,
+							match_awayteam_score } = scoreData;
+
+			let goalTime = scoreData.goalTime + "'";
+
+			const title = `GOAL! ${goalscoringTeam}: ${goalTime}`,
+						options = {
+							body: `${match_hometeam_name} ${match_hometeam_score} : ${match_awayteam_score} ${match_awayteam_name}`
+						};
+
 			navigator.serviceWorker.getRegistration().then(reg => {
 				reg.showNotification(title, options);
 			});
@@ -162,7 +170,23 @@ export default class Fixture extends Component {
 		// Update State when a goal is scored.
 		if (this.state.match_hometeam_score && (this.state.match_hometeam_score !== nextProps.fixture.match_hometeam_score)) {
 			this.displayNotification({
-				'match_hometeam_name': this.state.fixture.match_hometeam_name
+				'goalscoringTeam': nextProps.fixture.match_hometeam_name,
+				'goalTime': nextProps.fixture.match_status,
+				'match_hometeam_name': nextProps.fixture.match_hometeam_name,
+				'match_hometeam_score': nextProps.fixture.match_hometeam_score,
+				'match_awayteam_name': nextProps.fixture.match_awayteam_name,
+				'match_awayteam_score': nextProps.fixture.match_awayteam_score
+			});
+
+			return true;
+		} else if (this.state.match_awayteam_score && (this.state.match_awayteam_score !== nextProps.fixture.match_awayteam_score)) {
+			this.displayNotification({
+				'goalscoringTeam': nextProps.fixture.match_awayteam_name,
+				'goalTime': nextProps.fixture.match_status,
+				'match_hometeam_name': nextProps.fixture.match_hometeam_name,
+				'match_hometeam_score': nextProps.fixture.match_hometeam_score,
+				'match_awayteam_name': nextProps.fixture.match_awayteam_name,
+				'match_awayteam_score': nextProps.fixture.match_awayteam_score
 			});
 
 			return true;

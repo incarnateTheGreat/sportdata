@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 import { ScaleLoader } from 'react-spinners';
 import { withRouter } from 'react-router';
 import Header from './components/Header';
@@ -26,7 +25,13 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		Notification.requestPermission();
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('sw.js').then((reg) => {
+				Notification.requestPermission();
+			}, (err) => {
+				console.log(err);
+			})
+		}
 	}
 
 	render() {
