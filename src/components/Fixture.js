@@ -16,7 +16,8 @@ export default class Fixture extends Component {
 			h2h_data: null,
 			fixture: [],
 			match_hometeam_score: null,
-			match_awayteam_score: null
+			match_awayteam_score: null,
+			match_status: null
 		};
 	}
 
@@ -126,7 +127,7 @@ export default class Fixture extends Component {
 		return await axios(url);
 	}
 
-	displayNotification(scoreData) {
+	displayNotification(e, scoreData) {
 		if (Notification.permission === 'granted') {
 			const { goalscoringTeam,
 							match_hometeam_name,
@@ -134,9 +135,18 @@ export default class Fixture extends Component {
 							match_awayteam_name,
 							match_awayteam_score } = scoreData;
 
-			let goalTime = scoreData.goalTime + "'";
+			let matchTime = scoreData.matchTime + "'",
+					matchEvent = null;
 
-			const title = `GOAL! ${goalscoringTeam}: ${goalTime}`,
+			if (e === 'goal') {
+				matchEvent = `GOAL! ${goalscoringTeam}: ${matchTime}`;
+			} else if (e === 'time' && scoreData.matchTime === 'HT') {
+				matchEvent = `Half-Time`;
+			} else if (e === 'time' && scoreData.matchTime === 'FT') {
+				matchEvent = `Full-Time`;
+			}
+
+			const title = matchEvent,
 						options = {
 							body: `${match_hometeam_name} ${match_hometeam_score} : ${match_awayteam_score} ${match_awayteam_name}`
 						};
@@ -147,52 +157,65 @@ export default class Fixture extends Component {
 		}
 	}
 
-	updateFixtureData() {
-		const stateScores = { fixture: this.props.fixture,
-													match_hometeam_score: this.props.fixture.match_hometeam_score,
-													match_awayteam_score: this.props.fixture.match_awayteam_score };
-
-		this.setState(stateScores);
-	}
-
-	componentDidMount() {
-		this.updateFixtureData();
-	}
-
-	componentDidUpdate() {
-		this.updateFixtureData();
+	static getDerivedStateFromProps(nextProps, prevState) {
+		// The object you return from this function will be merged with the current state.
+		return {
+			fixture: nextProps.fixture,
+			match_hometeam_score: nextProps.fixture.match_hometeam_score,
+			match_awayteam_score: nextProps.fixture.match_awayteam_score,
+			match_status: nextProps.fixture.match_status };
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		// Populate State on render.
 		if (!this.state.match_hometeam_score) return true;
 
-		// Update State when a goal is scored.
+		// Update State when a Home or Away Goal is scored.
 		if (this.state.match_hometeam_score && (this.state.match_hometeam_score !== nextProps.fixture.match_hometeam_score)) {
-			this.displayNotification({
+			this.displayNotification('goal', {
 				'goalscoringTeam': nextProps.fixture.match_hometeam_name,
-				'goalTime': nextProps.fixture.match_status,
+				'matchTime': nextProps.fixture.match_status,
 				'match_hometeam_name': nextProps.fixture.match_hometeam_name,
 				'match_hometeam_score': nextProps.fixture.match_hometeam_score,
 				'match_awayteam_name': nextProps.fixture.match_awayteam_name,
 				'match_awayteam_score': nextProps.fixture.match_awayteam_score
 			});
-
-			return true;
 		} else if (this.state.match_awayteam_score && (this.state.match_awayteam_score !== nextProps.fixture.match_awayteam_score)) {
-			this.displayNotification({
+			this.displayNotification('goal', {
 				'goalscoringTeam': nextProps.fixture.match_awayteam_name,
-				'goalTime': nextProps.fixture.match_status,
+				'matchTime': nextProps.fixture.match_status,
 				'match_hometeam_name': nextProps.fixture.match_hometeam_name,
 				'match_hometeam_score': nextProps.fixture.match_hometeam_score,
 				'match_awayteam_name': nextProps.fixture.match_awayteam_name,
 				'match_awayteam_score': nextProps.fixture.match_awayteam_score
 			});
-
-			return true;
 		}
 
-		return false;
+		// Display Half-Time.
+		if (this.state.match_status !== 'HT' && (nextProps.fixture.match_status === 'HT')) {
+			this.displayNotification('time', {
+				'goalscoringTeam': nextProps.fixture.match_awayteam_name,
+				'matchTime': nextProps.fixture.match_status,
+				'match_hometeam_name': nextProps.fixture.match_hometeam_name,
+				'match_hometeam_score': nextProps.fixture.match_hometeam_score,
+				'match_awayteam_name': nextProps.fixture.match_awayteam_name,
+				'match_awayteam_score': nextProps.fixture.match_awayteam_score
+			});
+		}
+
+		// Display Full-Time.
+		if (this.state.match_status !== 'FT' && (nextProps.fixture.match_status === 'FT')) {
+			this.displayNotification('time', {
+				'goalscoringTeam': nextProps.fixture.match_awayteam_name,
+				'matchTime': nextProps.fixture.match_status,
+				'match_hometeam_name': nextProps.fixture.match_hometeam_name,
+				'match_hometeam_score': nextProps.fixture.match_hometeam_score,
+				'match_awayteam_name': nextProps.fixture.match_awayteam_name,
+				'match_awayteam_score': nextProps.fixture.match_awayteam_score
+			});
+		}
+
+		return true;
 	}
 
 	render() {

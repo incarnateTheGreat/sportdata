@@ -28,9 +28,8 @@ class App extends Component {
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('sw.js').then((reg) => {
 				Notification.requestPermission();
-			}, (err) => {
-				console.log(err);
-			})
+			},
+			(err) => console.log(err))
 		}
 	}
 

@@ -166,11 +166,26 @@ class Fixtures extends Component {
   }
 
 	updateStubData() {
+		// Home Team Goal
 		// stubScoreData[0].match_hometeam_score++;
 		// stubScoreData[0].match_hometeam_score = stubScoreData[0].match_hometeam_score.toString();
 
+		// Away Team Goal
 		stubScoreData[0].match_awayteam_score++;
 		stubScoreData[0].match_awayteam_score = stubScoreData[0].match_awayteam_score.toString();
+
+		// Time Change
+		if (stubScoreData[0].match_status !== 'HT') {
+			stubScoreData[0].match_status = parseInt(stubScoreData[0].match_status, 10);
+			stubScoreData[0].match_status = stubScoreData[0].match_status + 1;
+
+			if (stubScoreData[0].match_status !== 'HT' && stubScoreData[0].match_status > 45) {
+				stubScoreData[0].match_status = 'HT';
+			}
+
+			stubScoreData[0].match_status = stubScoreData[0].match_status.toString();
+		}
+
 
 		this.getFixtures();
 	}

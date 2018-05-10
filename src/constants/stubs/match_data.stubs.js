@@ -5,7 +5,7 @@ export let stubScoreData = [{
   "league_id": "63",
   "league_name": "Championship",
   "match_date": "2018-05-06",
-  "match_status": "50",
+  "match_status": "44",
   "match_time": "13:30",
   "match_hometeam_name": "Birmingham City",
   "match_hometeam_score": "3",
