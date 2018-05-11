@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import FixtureData from './FixtureData';
 import H2HData from './H2HData';
-import * as constants from '../constants/constants';
+import CustomCheckbox from './Custom-Checkbox';
+import { API_FOOTBALL } from '../constants/constants';
 import classNames from 'classnames';
 import axios from 'axios';
 import moment from 'moment';
@@ -12,6 +13,7 @@ export default class Fixture extends Component {
 		super();
 
 		this.state = {
+			isNotificationEnabled: false,
 			isLoading: false,
 			h2h_data: null,
 			fixture: [],
@@ -19,6 +21,8 @@ export default class Fixture extends Component {
 			match_awayteam_score: null,
 			match_status: null
 		};
+
+		this.toggleFollowMatch = this.toggleFollowMatch.bind(this);
 	}
 
 	handleMatchTime() {
@@ -94,7 +98,7 @@ export default class Fixture extends Component {
 	}
 
 	getH2HData({match_hometeam_name, match_awayteam_name}) {
-		const url = `https://apifootball.com/api/?action=get_H2H&firstTeam=${match_hometeam_name}&secondTeam=${match_awayteam_name}&APIkey=${constants.API_FOOTBALL}`;
+		const url = `https://apifootball.com/api/?action=get_H2H&firstTeam=${match_hometeam_name}&secondTeam=${match_awayteam_name}&APIkey=${API_FOOTBALL}`;
 
 		this.setState({ isLoading: true }, () => {
 			this.getData(url).then(data => {
@@ -128,7 +132,7 @@ export default class Fixture extends Component {
 	}
 
 	displayNotification(e, scoreData) {
-		if (Notification.permission === 'granted') {
+		if (Notification.permission === 'granted' && this.state.isNotificationEnabled) {
 			const { goalscoringTeam,
 							match_hometeam_name,
 							match_hometeam_score,
@@ -155,6 +159,10 @@ export default class Fixture extends Component {
 				reg.showNotification(title, options);
 			});
 		}
+	}
+
+	toggleFollowMatch() {
+		this.setState({ isNotificationEnabled: (this.state.isNotificationEnabled ? false : true ) })
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -235,6 +243,12 @@ export default class Fixture extends Component {
 			<div className={this.setMatchRowClass()} id={`match-${this.props.fixture.match_id}`}>
 				<div className='fixture-table__row' onClick={(e) => this.renderMatchData(e)}>
 					<div className='fixture-table__row__scoreline'>
+						<div className='fixture-table__row__element --checkbox'>
+							<CustomCheckbox
+								clickEvent={this.toggleFollowMatch}
+								id={this.props.fixture.match_id}
+								name={this.props.fixture.match_id} />
+						</div>
 						<div className='fixture-table__row__element'>
 							<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
 							<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>

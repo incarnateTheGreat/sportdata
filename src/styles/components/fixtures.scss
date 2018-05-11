@@ -76,19 +76,19 @@
 				width: 45%;
 
 				&:nth-of-type(1) {
+					justify-content: center;
+					width: 5%;
+				}
+				&:nth-of-type(2) {
 					justify-content: flex-end;
 					text-align: right;
 				}
-				&:nth-of-type(2) {
+				&:nth-of-type(3) {
 					font-weight: bold;
 					text-align: center;
 					width: 20%;
-
-					@include respond-to(sm-max) {
-						width: 20%;
-					}
 				}
-				&:nth-of-type(3) {
+				&:nth-of-type(4) {
 					justify-content: flex-start;
 					text-align: left;
 				}
@@ -131,5 +131,19 @@
 
 	@include respond-to(sm-max) {
 		width: 100%;
+
+		.fixture-table {
+			&__row {
+				&__element {
+					&:nth-of-type(1) {
+						width: 10%;
+					}
+
+					&:nth-of-type(3) {
+						width: 30%;
+					}
+				}
+			}
+		}
 	}
 }
