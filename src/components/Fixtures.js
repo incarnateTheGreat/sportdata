@@ -72,21 +72,23 @@ class Fixtures extends Component {
 
 	getFixtures() {
 		// Prevent Fixture Loading Spinner from rendering on default load.
-		if (this.state.fixtures.length > 0) {
-			this.setState({ isLoading: true });
-		}
+		if (this.state.fixtures.length > 0) this.setState({ isLoading: true });
+
+		// Stop the Timer to prevent it from firing when there's no live data.
+		if (this.interval) this.stopTimerInterval();
 
 		const format = 'YYYY-MM-DD',
 					{ from, to } = this.getDateRange(),
 					league_id = this.state.league_id || Object.keys(LEAGUE_IDS)[0],
 					cacheTimestamp = new Date().getTime(),
-					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}&timestamp=${cacheTimestamp}`;
+					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}&timestamp=${cacheTimestamp}`,
+					stateObj = { isLoading: false, startDate: from, endDate: to };
 		let dataArr = [],
 				fixtures = [];
 
 		// Return Fixture Data and group by date.
 		this.getData(url).then(data => {
-			const stateObj = { fixtures, isLoading: false, startDate: from, endDate: to };
+			stateObj['fixtures'] = fixtures;
 
 			if (data.data.error !== 404) {
 				dataArr = data.data.reduce((r, a) => {
@@ -102,7 +104,7 @@ class Fixtures extends Component {
 					// Find and determine if Matches are Live today and if they have not been completed (or have yet to start).
 					for (let x in dataArr) {
 						for (let y = 0; y < dataArr[x].length; y++) {
-							if (dataArr[x][y]['match_live'] === '1' && dataArr[x][y]['match_status'] !== 'FT') {
+							if (dataArr[x][y]['match_live'] === '1' && dataArr[x][y]['match_status'] === '') {
 								if (!this.interval) this.startInterval();
 								break;
 							}
@@ -119,6 +121,11 @@ class Fixtures extends Component {
 					store.dispatch(isLoading(false));
 				})
 			}
+		}).catch(err => {
+			this.setState(stateObj, () => {
+				console.log('err:', err);
+				store.dispatch(isLoading(false));
+			})
 		});
 	}
 
@@ -154,8 +161,12 @@ class Fixtures extends Component {
 		return leagueSelections;
 	}
 
+	stopTimerInterval() {
+		clearInterval(this.interval);
+	}
+
 	componentWillUnmount() {
-    clearInterval(this.interval);
+		this.stopTimerInterval();
   }
 
   render() {

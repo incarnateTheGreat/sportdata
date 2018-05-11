@@ -238,19 +238,20 @@ export default class Fixture extends Component {
 			'fixture-table__row__element --score',
 			match_live === '1' && match_status !== 'FT' ? '--live' : ''
 		)
-
+		
 		return (
 			<div className={this.setMatchRowClass()} id={`match-${this.props.fixture.match_id}`}>
 				<div className='fixture-table__row' onClick={(e) => this.renderMatchData(e)}>
 					<div className='fixture-table__row__scoreline'>
-						{match_live === '1' && match_status !== 'FT' && (
-							<div className='fixture-table__row__element --checkbox'>
+						<div className='fixture-table__row__element --checkbox'>
+							{match_status === '' && (match_live === '1' && match_status !== 'FT') && (
 								<CustomCheckbox
 									clickEvent={this.toggleFollowMatch}
 									id={this.props.fixture.match_id}
 									name={this.props.fixture.match_id} />
-							</div>)
-						}
+								)
+							}
+						</div>
 						<div className='fixture-table__row__element --homeTeam'>
 							<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
 							<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
