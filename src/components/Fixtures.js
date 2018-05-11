@@ -5,9 +5,6 @@ import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { API_FOOTBALL, LEAGUE_IDS } from '../constants/constants';
 
-// Stub data
-import { stubScoreData } from '../constants/stubs/match_data.stubs';
-
 // Redux
 import { connect } from 'react-redux';
 import store from '../store/index';
@@ -32,8 +29,6 @@ class Fixtures extends Component {
 		this.handleChangeStart = this.handleChangeStart.bind(this);
 		this.handleChangeEnd = this.handleChangeEnd.bind(this);
 		this.getLeague = this.getLeague.bind(this);
-
-		this.updateStubData = this.updateStubData.bind(this);
 	}
 
 	getDateRange() {
@@ -93,9 +88,7 @@ class Fixtures extends Component {
 		this.getData(url).then(data => {
 			const stateObj = { fixtures, isLoading: false, startDate: from, endDate: to };
 
-			// if (data.data.error !== 404) {
-				data.data = stubScoreData;
-
+			if (data.data.error !== 404) {
 				dataArr = data.data.reduce((r, a) => {
 					r[a.match_date] = r[a.match_date] || [];
 					r[a.match_date].push(a);
@@ -110,7 +103,7 @@ class Fixtures extends Component {
 					for (let x in dataArr) {
 						for (let y = 0; y < dataArr[x].length; y++) {
 							if (dataArr[x][y]['match_live'] === '1' && dataArr[x][y]['match_status'] !== 'FT') {
-								// if (!this.interval) this.startInterval();
+								if (!this.interval) this.startInterval();
 								break;
 							}
 						}
@@ -121,11 +114,11 @@ class Fixtures extends Component {
 						store.dispatch(isLoading(false));
 					});
 				}
-			// } else {
-			// 	this.setState(stateObj, () => {
-			// 		store.dispatch(isLoading(false));
-			// 	})
-			// }
+			} else {
+				this.setState(stateObj, () => {
+					store.dispatch(isLoading(false));
+				})
+			}
 		});
 	}
 
@@ -165,72 +158,46 @@ class Fixtures extends Component {
     clearInterval(this.interval);
   }
 
-	updateStubData() {
-		// Home Team Goal
-		// stubScoreData[0].match_hometeam_score++;
-		// stubScoreData[0].match_hometeam_score = stubScoreData[0].match_hometeam_score.toString();
-
-		// Away Team Goal
-		stubScoreData[0].match_awayteam_score++;
-		stubScoreData[0].match_awayteam_score = stubScoreData[0].match_awayteam_score.toString();
-
-		// Time Change
-		if (stubScoreData[0].match_status !== 'HT') {
-			stubScoreData[0].match_status = parseInt(stubScoreData[0].match_status, 10);
-			stubScoreData[0].match_status = stubScoreData[0].match_status + 1;
-
-			if (stubScoreData[0].match_status !== 'HT' && stubScoreData[0].match_status > 45) {
-				stubScoreData[0].match_status = 'HT';
-			}
-
-			stubScoreData[0].match_status = stubScoreData[0].match_status.toString();
-		}
-
-
-		this.getFixtures();
-	}
-
   render() {
 		return (
 			<section className='fixtures'>
 				<div className='date-pickers'>
-					<div className='date-pickers__container'>
+					<div className='date-pickers__container date-pickers__league'>
 						<label className='date-pickers__label' htmlFor="date-pickers__select">League:</label>
 						<select name='date-pickers__select' id='date-pickers__select' onChange={this.getLeague}>
 							{this.leagueDropdown()}
 						</select>
 					</div>
 
-					<div className='date-pickers__container'>
-						<label className='date-pickers__label' htmlFor='date-pickers__start-label'>Start:</label>
-						<DatePicker
-							name='date-pickers__start-label'
-							id='date-pickers__start-label'
-							dateFormat='LL'
-							selected={this.state.startDate}
-							selectsStart
-							showMonthDropdown
-							startDate={this.state.startDate}
-							endDate={this.state.endDate}
-							onChange={this.handleChangeStart} />
-					</div>
-
-					<div className='date-pickers__container'>
-						<label className='date-pickers__label' htmlFor="date-pickers__end-label">End:</label>
-						<DatePicker
-							name='date-pickers__end-label'
-							id='date-pickers__end-label'
-							dateFormat='LL'
-							selected={this.state.endDate}
-							selectsEnd
-							showMonthDropdown
-							startDate={this.state.startDate}
-							endDate={this.state.endDate}
-							onChange={this.handleChangeEnd} />
+					<div className='date-pickers__dates'>
+						<div className='date-pickers__container'>
+							<label className='date-pickers__label' htmlFor='date-pickers__start-label'>Start:</label>
+							<DatePicker
+								name='date-pickers__start-label'
+								id='date-pickers__start-label'
+								dateFormat='LL'
+								selected={this.state.startDate}
+								selectsStart
+								showMonthDropdown
+								startDate={this.state.startDate}
+								endDate={this.state.endDate}
+								onChange={this.handleChangeStart} />
+						</div>
+						<div className='date-pickers__container'>
+							<label className='date-pickers__label' htmlFor="date-pickers__end-label">End:</label>
+							<DatePicker
+								name='date-pickers__end-label'
+								id='date-pickers__end-label'
+								dateFormat='LL'
+								selected={this.state.endDate}
+								selectsEnd
+								showMonthDropdown
+								startDate={this.state.startDate}
+								endDate={this.state.endDate}
+								onChange={this.handleChangeEnd} />
+						</div>
 					</div>
 				</div>
-
-				<button onClick={this.updateStubData}>hey</button>
 
 				{this.state.fixtures.length > 0 ? this.state.fixtures.map((fixture, i) =>
 					<div className='fixture-table' key={i}>

@@ -61,7 +61,7 @@
     }
   }
 
-  .standings__legend {
+  &__legend {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -107,14 +107,17 @@
 }
 
 @include respond-to(xs-max) {
-  .standings__legend {
-    width: 100%;
-  }
+  .standings {
+    &__legend {
+      flex-direction: column;
+      width: 100%;
+    }
 
-  .standings__table {
-    tr {
-      th {
-        width: 8%;
+    &__table {
+      tr {
+        th {
+          width: 8%;
+        }
       }
     }
   }

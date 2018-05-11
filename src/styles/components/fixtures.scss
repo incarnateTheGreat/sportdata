@@ -4,14 +4,22 @@
 	}
 
 	.date-pickers {
-		align-items: center;
 		display: flex;
+		flex-direction: column;
 		margin: 0 0 10px;
+
+		&__league {
+			flex-grow: 1;
+		}
+
+		&__dates {
+			display: flex;
+		}
 
 		&__container {
 			display: flex;
 			flex-direction: column;
-			padding: 0 10px 0 0;
+			padding: 0 10px 10px 0;
 		}
 
 		&__label {
@@ -75,26 +83,23 @@
 				display: flex;
 				width: 45%;
 
-				&:nth-of-type(1) {
+				&.--checkbox {
 					justify-content: center;
 					width: 5%;
 				}
-				&:nth-of-type(2) {
+				&.--homeTeam {
 					justify-content: flex-end;
 					text-align: right;
 				}
-				&:nth-of-type(3) {
+				&.--score {
+					flex-direction: column;
 					font-weight: bold;
 					text-align: center;
 					width: 20%;
 				}
-				&:nth-of-type(4) {
+				&.--awayTeam {
 					justify-content: flex-start;
 					text-align: left;
-				}
-
-				&.--score {
-					flex-direction: column;
 				}
 
 				&.--live {
@@ -135,13 +140,28 @@
 		.fixture-table {
 			&__row {
 				&__element {
-					&:nth-of-type(1) {
+
+					&.--checkbox {
 						width: 10%;
 					}
 
-					&:nth-of-type(3) {
+					&.--score {
 						width: 30%;
 					}
+				}
+			}
+		}
+	}
+
+	@include respond-to(xs-max) {
+		.date-pickers__dates {
+			.date-pickers__container {
+				width: 50%;
+
+				.react-datepicker-wrapper,
+				.react-datepicker__input-container,
+				input {
+					width: 100%;
 				}
 			}
 		}

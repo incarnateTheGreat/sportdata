@@ -243,13 +243,15 @@ export default class Fixture extends Component {
 			<div className={this.setMatchRowClass()} id={`match-${this.props.fixture.match_id}`}>
 				<div className='fixture-table__row' onClick={(e) => this.renderMatchData(e)}>
 					<div className='fixture-table__row__scoreline'>
-						<div className='fixture-table__row__element --checkbox'>
-							<CustomCheckbox
-								clickEvent={this.toggleFollowMatch}
-								id={this.props.fixture.match_id}
-								name={this.props.fixture.match_id} />
-						</div>
-						<div className='fixture-table__row__element'>
+						{match_live === '1' && match_status !== 'FT' && (
+							<div className='fixture-table__row__element --checkbox'>
+								<CustomCheckbox
+									clickEvent={this.toggleFollowMatch}
+									id={this.props.fixture.match_id}
+									name={this.props.fixture.match_id} />
+							</div>)
+						}
+						<div className='fixture-table__row__element --homeTeam'>
 							<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
 							<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
 						</div>
@@ -257,7 +259,7 @@ export default class Fixture extends Component {
 							{match_hometeam_score} - {match_awayteam_score}
 							<div className='fixture-table__row__time'>{this.handleMatchTime()}</div>
 						</div>
-						<div className='fixture-table__row__element'>
+						<div className='fixture-table__row__element --awayTeam'>
 							<span className='fixture-table__row__scoreline__label'>{match_awayteam_name}</span>
 							<div className='fixture-table__row__red-cards'>{this.displayRedCards('away')}</div>
 						</div>
