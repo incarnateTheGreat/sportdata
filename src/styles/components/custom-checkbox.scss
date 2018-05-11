@@ -11,10 +11,14 @@
   position: relative;
 	padding: 0 0 4px 10px;
 
-	input {
-	  cursor: pointer;
+	input[type='checkbox'] {
+		cursor: pointer;
 		opacity: 0;
 		position: absolute;
+
+		&:checked ~ .checkmark:after {
+		  display: block;
+		}
 	}
 
 	.checkmark {
@@ -22,30 +26,26 @@
 		box-shadow: 2px 2px $dark-white;
 		height: 18px;
 		left: 0;
-	  position: absolute;
-	  top: 0;
-	  width: 18px;
-	}
+		position: absolute;
+		top: 0;
+		width: 18px;
 
-	.checkmark:after {
-		-webkit-transform: rotate(45deg);
-	  -ms-transform: rotate(45deg);
-	  transform: rotate(45deg);
-		border: solid white;
-	  border-width: 0 3px 3px 0;
-		height: 10px;
-	  left: 9px;
-	  top: 5px;
-	  width: 5px;
-	}
+		&:after {
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+			border: solid white;
+			border-width: 0 3px 3px 0;
+			height: 10px;
+			left: 7px;
+			top: 4px;
+			width: 5px;
+		}
 
-	.checkmark:after {
-	  content: "";
-		display: none;
-	  position: absolute;
-	}
-
-	input:checked ~ .checkmark:after {
-	  display: block;
+		&:after {
+			content: "";
+			display: none;
+			position: absolute;
+		}
 	}
 }

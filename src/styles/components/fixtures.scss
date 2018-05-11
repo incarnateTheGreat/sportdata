@@ -85,7 +85,7 @@
 
 				&.--checkbox {
 					justify-content: center;
-					width: 5%;
+					width: 10%;
 				}
 				&.--homeTeam {
 					justify-content: flex-end;
@@ -141,10 +141,6 @@
 			&__row {
 				&__element {
 
-					&.--checkbox {
-						width: 10%;
-					}
-
 					&.--score {
 						width: 30%;
 					}
@@ -154,6 +150,17 @@
 	}
 
 	@include respond-to(xs-max) {
+		.fixture-table {
+			&__row {
+				&__element {
+
+					&.--checkbox {
+						width: 20%;
+					}
+				}
+			}
+		}
+
 		.date-pickers__dates {
 			.date-pickers__container {
 				width: 50%;
