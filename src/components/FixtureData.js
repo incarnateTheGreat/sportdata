@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 
 const goalscorer = (e, i) => {
 	return (
@@ -61,9 +60,10 @@ const NoDataMsg = (fixture) => {
 
 export default class FixtureData extends Component {
 	refineDoubleBooking(cardsGoalScorers) {
-		const bookings = cardsGoalScorers.filter(record => record['card'] !== undefined),
-					redCardPlayer = bookings.find(player => player['card'] === 'redcard');
 
+	/*
+	const bookings = cardsGoalScorers.filter(record => record['card'] !== undefined),
+				redCardPlayer = bookings.find(player => player['card'] === 'redcard');
 		if (redCardPlayer) {
 			// Get Player Name and use it to find duplicates in the loop below.
 			const redCardPlayerName = redCardPlayer['home_fault'] || redCardPlayer['away_fault'];
@@ -99,6 +99,7 @@ export default class FixtureData extends Component {
 			// 	cardsGoalScorers.splice(redIndex, 1);
 			// }
 		}
+	*/
 	}
 
 	refineGameData() {
