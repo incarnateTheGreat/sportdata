@@ -139,13 +139,11 @@ export default class Fixture extends Component {
 							match_awayteam_name,
 							match_awayteam_score } = scoreData;
 
-			let matchTime = scoreData.matchTime + "'",
+			let matchTime = scoreData.matchTime,
 					matchEvent = null;
 
 			if (e === 'goal') {
 				matchEvent = `GOAL! ${goalscoringTeam}: ${matchTime}`;
-			} else if (e === 'time' && scoreData.matchTime === 'HT') {
-				matchEvent = `Half-Time`;
 			} else if (e === 'time' && scoreData.matchTime === 'FT') {
 				matchEvent = `Full-Time`;
 			}
@@ -199,18 +197,6 @@ export default class Fixture extends Component {
 			});
 		}
 
-		// Display Half-Time.
-		if (this.state.match_status !== 'HT' && (nextProps.fixture.match_status === 'HT')) {
-			this.displayNotification('time', {
-				'goalscoringTeam': nextProps.fixture.match_awayteam_name,
-				'matchTime': nextProps.fixture.match_status,
-				'match_hometeam_name': nextProps.fixture.match_hometeam_name,
-				'match_hometeam_score': nextProps.fixture.match_hometeam_score,
-				'match_awayteam_name': nextProps.fixture.match_awayteam_name,
-				'match_awayteam_score': nextProps.fixture.match_awayteam_score
-			});
-		}
-
 		// Display Full-Time.
 		if (this.state.match_status !== 'FT' && (nextProps.fixture.match_status === 'FT')) {
 			this.displayNotification('time', {
@@ -226,6 +212,10 @@ export default class Fixture extends Component {
 		return true;
 	}
 
+	isMatchLive(match_live, match_status) {
+		return match_live === '1' && (match_status !== 'Postp.' && match_status !== 'FT' && match_status !== 'Canc.');
+	}
+
 	render() {
 		const { match_hometeam_name,
 						match_hometeam_score,
@@ -236,25 +226,29 @@ export default class Fixture extends Component {
 
 		const scoreClasses = classNames(
 			'fixture-table__row__element --score',
-			match_live === '1' && match_status !== 'FT' ? '--live' : ''
-		)
-		
+			this.isMatchLive(match_live, match_status) ? '--live' : ''
+		);
+
+		const setCheckboxClass = classNames(
+			'fixture-table__row__element --homeTeam',
+			this.isMatchLive(match_live, match_status) ? '--checkbox' : ''
+		);
+
 		return (
 			<div className={this.setMatchRowClass()} id={`match-${this.props.fixture.match_id}`}>
 				<div className='fixture-table__row' onClick={(e) => this.renderMatchData(e)}>
 					<div className='fixture-table__row__scoreline'>
-						<div className='fixture-table__row__element --checkbox'>
-							{match_status === '' && (match_live === '1' && match_status !== 'FT') && (
+						<div className={setCheckboxClass}>
+							{this.isMatchLive(match_live, match_status) && (
 								<CustomCheckbox
 									clickEvent={this.toggleFollowMatch}
 									id={this.props.fixture.match_id}
 									name={this.props.fixture.match_id} />
-								)
-							}
-						</div>
-						<div className='fixture-table__row__element --homeTeam'>
-							<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
-							<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
+							)}
+							<div>
+								<div className='fixture-table__row__red-cards'>{this.displayRedCards('home')}</div>
+								<span className='fixture-table__row__scoreline__label'>{match_hometeam_name}</span>
+							</div>
 						</div>
 						<div className={scoreClasses}>
 							{match_hometeam_score} - {match_awayteam_score}

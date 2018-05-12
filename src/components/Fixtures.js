@@ -19,8 +19,8 @@ class Fixtures extends Component {
 		this.state = {
 			fixtures: [],
 			h2h_list: [],
-			startDate: moment(),
-			endDate: moment().add(1, 'day'),
+			startDate: moment().subtract(1, 'day'),
+			endDate: moment(),
 			isLoading: false,
 			league_id: null
 		};
@@ -57,6 +57,12 @@ class Fixtures extends Component {
 		this.setState({ startDate, endDate }, () => {
 			store.dispatch(updateStartSearchDate(startDate));
 			store.dispatch(updateEndSearchDate(endDate));
+
+			// Stop the Timer to prevent it from firing when there's no live data.
+			if (this.interval) {
+				this.stopTimerInterval();
+			}
+
 			this.getFixtures();
 		})
 	}
@@ -66,6 +72,11 @@ class Fixtures extends Component {
 
 		// Update the State with the most-recently selected League.
 		this.setState({ league_id }, () => {
+			// Stop the Timer to prevent it from firing when there's no live data.
+			if (this.interval) {
+				this.stopTimerInterval();
+			}
+
 			this.getFixtures();
 		});
 	}
@@ -73,9 +84,6 @@ class Fixtures extends Component {
 	getFixtures() {
 		// Prevent Fixture Loading Spinner from rendering on default load.
 		if (this.state.fixtures.length > 0) this.setState({ isLoading: true });
-
-		// Stop the Timer to prevent it from firing when there's no live data.
-		if (this.interval) this.stopTimerInterval();
 
 		const format = 'YYYY-MM-DD',
 					{ from, to } = this.getDateRange(),
@@ -104,8 +112,11 @@ class Fixtures extends Component {
 					// Find and determine if Matches are Live today and if they have not been completed (or have yet to start).
 					for (let x in dataArr) {
 						for (let y = 0; y < dataArr[x].length; y++) {
-							if (dataArr[x][y]['match_live'] === '1' && dataArr[x][y]['match_status'] === '') {
-								if (!this.interval) this.startInterval();
+							if (dataArr[x][y]['match_live'] === '1' &&
+								 (dataArr[x][y]['match_status'] !== 'Post.' && dataArr[x][y]['match_status'] !== 'FT' && dataArr[x][y]['match_status'] !== 'Canc.')) {
+								if (!this.interval) {
+									this.startInterval();
+								}
 								break;
 							}
 						}
@@ -148,7 +159,7 @@ class Fixtures extends Component {
 	startInterval() {
 		this.interval = setInterval(() => {
 			this.getFixtures();
-		}, 60000);
+		}, 30000);
 	}
 
 	leagueDropdown() {

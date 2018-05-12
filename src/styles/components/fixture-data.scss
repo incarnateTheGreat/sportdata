@@ -23,6 +23,7 @@
 
 				.goalscorer, .booked-player {
 					margin: 0 10px;
+					text-align: right;
 
 					@include respond-to(xs-max) {
 						font-size: $font-size-small;
