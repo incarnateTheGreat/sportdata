@@ -195,7 +195,7 @@ class Fixtures extends Component {
 						<div className='date-pickers__container'>
 							<label className='date-pickers__label' htmlFor='date-pickers__start-label'>Start:</label>
 							<DatePicker
-								readOnly='true'
+								readOnly={true}
 								name='date-pickers__start-label'
 								id='date-pickers__start-label'
 								dateFormat='LL'
@@ -209,7 +209,7 @@ class Fixtures extends Component {
 						<div className='date-pickers__container'>
 							<label className='date-pickers__label' htmlFor="date-pickers__end-label">End:</label>
 							<DatePicker
-								readOnly='true'
+								readOnly={true}
 								name='date-pickers__end-label'
 								id='date-pickers__end-label'
 								dateFormat='LL'
