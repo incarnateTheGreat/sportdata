@@ -2,7 +2,8 @@ import {
   TOGGLE_LOADING_SPINNER_OFF,
   TOGGLE_LOADING_SPINNER_ON,
   UPDATE_START_SEARCH_DATE,
-  UPDATE_END_SEARCH_DATE
+  UPDATE_END_SEARCH_DATE,
+  UPDATE_LEAGUE_SELECTION
 } from "../constants/action-types";
 
 export const isLoading = (isLoading) => {
@@ -17,4 +18,8 @@ export const updateStartSearchDate = (startDate) => {
 
 export const updateEndSearchDate = (endDate) => {
   return { type: UPDATE_END_SEARCH_DATE, payload: endDate }
+};
+
+export const updateLeagueSelection = (leagueSelection) => {
+  return { type: UPDATE_LEAGUE_SELECTION, payload: leagueSelection }
 };

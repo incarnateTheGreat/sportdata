@@ -5,7 +5,7 @@ import { API_FOOTBALL, LEAGUE_IDS, LEAGUE_POSITION_PLACEMENTS } from '../constan
 // Redux
 import { connect } from 'react-redux';
 import store from "../store/index";
-import { isLoading } from "../actions/index";
+import { isLoading, updateLeagueSelection } from "../actions/index";
 
 class Standings extends Component {
 	constructor(props) {
@@ -32,7 +32,7 @@ class Standings extends Component {
 			store.dispatch(isLoading(true));
 		}
 
-		const league_id = this.state.league_id || Object.keys(LEAGUE_IDS)[0],
+		const league_id = store.getState(updateLeagueSelection).leagueSelection || Object.keys(LEAGUE_IDS)[0],
 					cacheTimestamp = new Date().getTime(),
 					arrows = document.getElementsByClassName('standings__arrow'),
 					url = `https://apifootball.com/api/?action=get_standings&league_id=${league_id}&APIkey=${API_FOOTBALL}&timestamp=${cacheTimestamp}`;
@@ -52,9 +52,21 @@ class Standings extends Component {
 
 			this.setState({ standings }, () => {
 				store.dispatch(isLoading(false));
+				this.setCurrentSelectedLeague();
 				this.assignPositionClasses();
 			})
 		});
+	}
+
+	setCurrentSelectedLeague() {
+		const sel = document.getElementById('date-pickers__select');
+
+		for (let i = 0, j = sel.options.length; i < j; i++) {
+			if (sel.options[i].value === store.getState(updateLeagueSelection).leagueSelection) {
+				sel.selectedIndex = i;
+				break;
+			}
+		}
 	}
 
 	assignPositionClasses() {
@@ -70,11 +82,11 @@ class Standings extends Component {
 		tbody.forEach(elem => {
 			const position = elem.classList[0].split('-').pop();
 
-			if (position < LEAGUE_POSITION_PLACEMENTS[this.state.league_id].promotion) {
+			if (position < LEAGUE_POSITION_PLACEMENTS[store.getState(updateLeagueSelection).leagueSelection].promotion) {
 				elem.classList.add('--promotion')
-			} else if (position < LEAGUE_POSITION_PLACEMENTS[this.state.league_id].playoffs) {
+			} else if (position < LEAGUE_POSITION_PLACEMENTS[store.getState(updateLeagueSelection).leagueSelection].playoffs) {
 				elem.classList.add('--playoffs')
-			} else if (position >= LEAGUE_POSITION_PLACEMENTS[this.state.league_id].relegation) {
+			} else if (position >= LEAGUE_POSITION_PLACEMENTS[store.getState(updateLeagueSelection).leagueSelection].relegation) {
 				elem.classList.add('--relegation')
 			}
 		})
@@ -124,24 +136,12 @@ class Standings extends Component {
 		}
 	}
 
-	componentDidMount() {
-		// Set League ID in State by default if not selected.
-		if (!this.state.league_id) {
-			this.setState({ league_id: Object.keys(LEAGUE_IDS)[0] }, () => {
-				this.getStandings();
-			});
-		} else {
-			this.getStandings();
-		}
-	}
-
 	getLeague(id) {
 		const league_id = id.target.value;
 
 		// Update the State with the most-recently selected League.
-		this.setState({ league_id }, () => {
-			this.getStandings();
-		});
+		store.dispatch(updateLeagueSelection(league_id));
+		this.getStandings();
 	}
 
 	leagueDropdown() {
@@ -154,6 +154,15 @@ class Standings extends Component {
 		return leagueSelections;
 	}
 
+	componentDidMount() {
+		// Set League ID in State by default if not selected.
+		if (!store.getState(updateLeagueSelection).leagueSelection) {
+			store.dispatch(updateLeagueSelection(Object.keys(LEAGUE_IDS)[0]));
+		}
+
+		this.getStandings();
+	}
+
 	render() {
 		return (
 			<section className='standings'>
@@ -161,7 +170,7 @@ class Standings extends Component {
 					<div className='standings__wrapper'>
 						<div className='standings__picker'>
 							<span className='standings__picker__label'>League:</span>
-							<select onChange={this.getLeague}>
+							<select name='date-pickers__select' id='date-pickers__select' onChange={this.getLeague}>
 								{this.leagueDropdown()}
 							</select>
 						</div>

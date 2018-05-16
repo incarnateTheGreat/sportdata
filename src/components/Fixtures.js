@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 import store from '../store/index';
 import { isLoading,
 				 updateStartSearchDate,
-				 updateEndSearchDate } from '../actions/index';
+				 updateEndSearchDate,
+			 	 updateLeagueSelection } from '../actions/index';
 
 class Fixtures extends Component {
 	constructor(props) {
@@ -21,8 +22,7 @@ class Fixtures extends Component {
 			h2h_list: [],
 			startDate: moment().subtract(1, 'day'),
 			endDate: moment(),
-			isLoading: false,
-			league_id: null
+			isLoading: false
 		};
 
 		this.interval = null;
@@ -70,15 +70,15 @@ class Fixtures extends Component {
 	getLeague(id) {
 		const league_id = id.target.value;
 
-		// Update the State with the most-recently selected League.
-		this.setState({ league_id }, () => {
-			// Stop the Timer to prevent it from firing when there's no live data.
-			if (this.interval) {
-				this.stopTimerInterval();
-			}
+		store.dispatch(updateLeagueSelection(league_id));
 
-			this.getFixtures();
-		});
+		// Update the State with the most-recently selected League.
+		// Stop the Timer to prevent it from firing when there's no live data.
+		if (this.interval) {
+			this.stopTimerInterval();
+		}
+
+		this.getFixtures();
 	}
 
 	getFixtures() {
@@ -87,7 +87,7 @@ class Fixtures extends Component {
 
 		const format = 'YYYY-MM-DD',
 					{ from, to } = this.getDateRange(),
-					league_id = this.state.league_id || Object.keys(LEAGUE_IDS)[0],
+					league_id = store.getState(updateLeagueSelection).leagueSelection || Object.keys(LEAGUE_IDS)[0],
 					cacheTimestamp = new Date().getTime(),
 					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}&timestamp=${cacheTimestamp}`,
 					stateObj = { isLoading: false, startDate: from, endDate: to };
@@ -145,17 +145,6 @@ class Fixtures extends Component {
 		return await axios(url);
 	}
 
-	componentDidMount() {
-		// Set League ID in State by default if not selected.
-		if (!this.state.league_id) {
-			this.setState({ league_id: Object.keys(LEAGUE_IDS)[0] }, () => {
-				this.getFixtures();
-			});
-		} else {
-			this.getFixtures();
-		}
-	}
-
 	startInterval() {
 		this.interval = setInterval(() => {
 			this.getFixtures();
@@ -176,11 +165,46 @@ class Fixtures extends Component {
 		clearInterval(this.interval);
 	}
 
+	componentDidMount() {
+		const sel = document.getElementById('date-pickers__select');
+
+		// Set League ID in State by default if not selected.
+		if (!store.getState(updateLeagueSelection).leagueSelection) {
+			store.dispatch(updateLeagueSelection(Object.keys(LEAGUE_IDS)[0]));
+		} else {
+			this.setCurrentSelectedLeague();
+		}
+
+		this.getFixtures();
+	}
+
+	setCurrentSelectedLeague() {
+		const sel = document.getElementById('date-pickers__select');
+
+		for (let i = 0, j = sel.options.length; i < j; i++) {
+			if (sel.options[i].value === store.getState(updateLeagueSelection).leagueSelection) {
+				sel.selectedIndex = i;
+				break;
+			}
+		}
+	}
+
+	renderFixtures() {
+		return this.state.fixtures.map((fixture, i) =>
+			<div className='fixture-table' key={i}>
+				<div className='fixture-table__row date'>
+					<div>{moment(fixture[0].match_date).format('MMMM D, YYYY')}</div>
+				</div>
+				{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
+			</div>
+		);
+	}
+
 	componentWillUnmount() {
 		this.stopTimerInterval();
-  }
+	}
 
-  render() {
+	render() {
 		return (
 			<section className='fixtures'>
 				<div className='date-pickers'>
@@ -223,16 +247,10 @@ class Fixtures extends Component {
 					</div>
 				</div>
 
-				{this.state.fixtures.length > 0 ? this.state.fixtures.map((fixture, i) =>
-					<div className='fixture-table' key={i}>
-						<div className='fixture-table__row date'>
-							<div>{moment(fixture[0].match_date).format('MMMM D, YYYY')}</div>
-						</div>
-						{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
-					</div>
-				) : (
-					<div>Sorry. There is no match data available based on your search criteria.</div>
-				)}
+				{this.state.fixtures.length > 0
+					? this.renderFixtures()
+					: (<div>Sorry. There is no match data available based on your search criteria.</div>)
+				}
 			</section>
 		)
   }
