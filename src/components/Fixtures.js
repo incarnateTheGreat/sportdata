@@ -148,7 +148,7 @@ class Fixtures extends Component {
 	startInterval() {
 		this.interval = setInterval(() => {
 			this.getFixtures();
-		}, 30000);
+		}, 60000);
 	}
 
 	leagueDropdown() {
@@ -166,8 +166,6 @@ class Fixtures extends Component {
 	}
 
 	componentDidMount() {
-		const sel = document.getElementById('date-pickers__select');
-
 		// Set League ID in State by default if not selected.
 		if (!store.getState(updateLeagueSelection).leagueSelection) {
 			store.dispatch(updateLeagueSelection(Object.keys(LEAGUE_IDS)[0]));
