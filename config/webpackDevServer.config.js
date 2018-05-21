@@ -79,6 +79,9 @@ module.exports = function(proxy, allowedHost) {
       // See https://github.com/facebookincubator/create-react-app/issues/387.
       disableDotRule: true,
     },
+    headers: {
+      "Access-Control-Allow-Origin": "*"
+    },
     public: allowedHost,
     proxy,
     before(app) {

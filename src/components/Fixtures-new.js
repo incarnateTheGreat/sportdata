@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import Fixture from './Fixture';
+import FixtureNew from './Fixture-new';
 import axios from 'axios';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
-import { API_FOOTBALL, LEAGUE_IDS } from '../constants/constants';
+import { API_FOOTBALL,
+				 FOOTBALL_DATA,
+				 LEAGUE_IDS } from '../constants/constants';
 
 // Redux
 import { connect } from 'react-redux';
@@ -13,14 +15,14 @@ import { isLoading,
 				 updateEndSearchDate,
 			 	 updateLeagueSelection } from '../actions/index';
 
-class Fixtures extends Component {
+class FixturesNew extends Component {
 	constructor(props) {
 		super();
 
 		this.state = {
 			fixtures: [],
 			h2h_list: [],
-			startDate: moment().subtract(1, 'month'),
+			startDate: moment().subtract(1, 'day'),
 			endDate: moment(),
 			isLoading: false
 		};
@@ -83,48 +85,55 @@ class Fixtures extends Component {
 
 	getFixtures() {
 		// Prevent Fixture Loading Spinner from rendering on default load.
-		if (this.state.fixtures.length > 0) this.setState({ isLoading: true });
+		// if (this.state.fixtures.length > 0) this.setState({ isLoading: true });
 
 		const format = 'YYYY-MM-DD',
 					{ from, to } = this.getDateRange(),
-					league_id = store.getState(updateLeagueSelection).leagueSelection || Object.keys(LEAGUE_IDS)[0],
+					// league_id = store.getState(updateLeagueSelection).leagueSelection || Object.keys(LEAGUE_IDS)[0],
 					cacheTimestamp = new Date().getTime(),
-					url = `https://apifootball.com/api/?action=get_events&match_live=1&from=${from.format(format)}&to=${to.format(format)}&league_id=${league_id}&APIkey=${API_FOOTBALL}&timestamp=${cacheTimestamp}`,
+					url = `https://api.football-data.org/v1/competitions/445/fixtures?timeFrameStart=2018-05-01&timeFrameEnd=2018-05-30&timestamp=${cacheTimestamp}`,
 					stateObj = { isLoading: false, startDate: from, endDate: to };
 		let dataArr = [],
 				fixtures = [];
 
 		// Return Fixture Data and group by date.
 		this.getData(url).then(data => {
-			stateObj['fixtures'] = fixtures;
+			store.dispatch(isLoading(false));
 
-			if (data.data.error !== 404) {
-				dataArr = data.data.reduce((r, a) => {
-					r[a.match_date] = r[a.match_date] || [];
-					r[a.match_date].push(a);
+			if (data.status !== 404) {
+				console.log(data.data);
+
+				dataArr = data.data.fixtures.reduce((r, a) => {
+					const date = moment(a.date).format('YYYY-MM-DD');
+					r[date] = r[date] || [];
+					r[date].push(a);
 					return r;
 				}, []);
+
+				stateObj['fixtures'] = fixtures;
 
 				if (Object.keys(dataArr).length > 0) {
 					// In order to loop through the array, we will push the objects into an array format.
 					for(let x in dataArr) fixtures.push(dataArr[x]);
 
+					// TODO: Determine Live matches for the day.
 					// Find and determine if Matches are Live today and if they have not been completed (or have yet to start).
-					for (let x in dataArr) {
-						for (let y = 0; y < dataArr[x].length; y++) {
-							if (dataArr[x][y]['match_live'] === '1' &&
-								 (dataArr[x][y]['match_status'] !== 'Post.' && dataArr[x][y]['match_status'] !== 'FT' && dataArr[x][y]['match_status'] !== 'Canc.')) {
-								if (!this.interval) {
-									this.startInterval();
-								}
-								break;
-							}
-						}
-					}
+					// for (let x in dataArr) {
+					// 	for (let y = 0; y < dataArr[x].length; y++) {
+					// 		if (dataArr[x][y]['match_live'] === '1' &&
+					// 			 (dataArr[x][y]['match_status'] !== 'Post.' && dataArr[x][y]['match_status'] !== 'FT' && dataArr[x][y]['match_status'] !== 'Canc.')) {
+					// 			if (!this.interval) {
+					// 				this.startInterval();
+					// 			}
+					// 			break;
+					// 		}
+					// 	}
+					// }
+
+					console.log(stateObj);
 
 					// Apply into the State.
 					this.setState(stateObj, () => {
-						console.log(this.state);
 						store.dispatch(isLoading(false));
 					});
 				}
@@ -143,7 +152,12 @@ class Fixtures extends Component {
 
 	async getData(url) {
 		store.dispatch(isLoading(true));
-		return await axios(url);
+
+		return await axios({
+		  method: 'get',
+		  url: url,
+			headers: { 'X-Auth-Token': FOOTBALL_DATA },
+		});
 	}
 
 	startInterval() {
@@ -194,7 +208,7 @@ class Fixtures extends Component {
 				<div className='fixture-table__row date'>
 					<div>{moment(fixture[0].match_date).format('MMMM D, YYYY')}</div>
 				</div>
-				{fixture.map((e, j) => <Fixture fixture={e} key={j} />)}
+				{/*fixture.map((e, j) => <FixtureNew fixture={e} key={j} />)*/}
 			</div>
 		);
 	}
@@ -257,4 +271,4 @@ class Fixtures extends Component {
 
 const mapStateToProps = (state) => ({ isLoading: state.isLoading });
 
-export default connect(mapStateToProps)(Fixtures);
+export default connect(mapStateToProps)(FixturesNew);

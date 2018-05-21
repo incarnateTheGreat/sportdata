@@ -35,6 +35,7 @@ class Header extends Component {
 					<ul>
 						<li className={this.activeClass('/')} onClick={() => this.navigateTo('/')}>Fixtures</li>
 						<li className={this.activeClass('/standings')} onClick={() => this.navigateTo('/standings')}>Standings</li>
+						<li className={this.activeClass('/fixtures-new')} onClick={() => this.navigateTo('/fixtures-new')}>Fixtures-New</li>
 					</ul>
 				</nav>
 			</header>
